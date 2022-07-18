@@ -3,7 +3,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:sqflite_database_example/db/notes_database.dart';
 import 'package:sqflite_database_example/model/note.dart';
 import 'package:sqflite_database_example/page/edit_note_page.dart';
-import 'package:sqflite_database_example/page/note_detail_page.dart';
 import 'package:sqflite_database_example/widget/note_card_widget.dart';
 
 class NotesPage extends StatefulWidget {
@@ -82,7 +81,7 @@ class _NotesPageState extends State<NotesPage> {
           return GestureDetector(
             onTap: () async {
               await Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => NoteDetailPage(noteId: note.id!),
+                builder: (context) => AddEditNotePage(note: note),
               ));
 
               refreshNotes();
