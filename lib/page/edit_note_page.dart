@@ -92,8 +92,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
       title: title,
       description: description,
     );
-    NotesDatabase database = NotesDatabase();
-    await database.update(note);
+    await NotesDatabase.instance.update(note);
   }
 
   Future addNote() async {
@@ -104,7 +103,6 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
       description: description,
       createdTime: DateTime.now(),
     );
-    NotesDatabase database = NotesDatabase();
-    await database.create(note);
+    await NotesDatabase.instance.create(note);
   }
 }
