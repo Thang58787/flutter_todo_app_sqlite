@@ -50,7 +50,7 @@ class NoteCardWidget extends StatelessWidget {
               SizedBox(height: 4),
               if (removeWhitespace(note.title) != '')
                 Text(
-                  note.title ?? '',
+                  note.title?.trim() ?? '',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 20,
@@ -59,7 +59,7 @@ class NoteCardWidget extends StatelessWidget {
                 ),
               if (removeWhitespace(note.description)  != '')
                 Text(
-                  note.description ?? '',
+                  note.description?.trim().replaceAll('\n', ' ') ?? '',
                   maxLines: 8,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
