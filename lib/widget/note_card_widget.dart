@@ -21,6 +21,10 @@ class NoteCardWidget extends StatelessWidget {
   final Note note;
   final int index;
 
+  String? removeWhitespace(String? str) {
+    return str?.replaceAll(' ', '');
+  }
+
   @override
   Widget build(BuildContext context) {
     /// Pick colors from the accent colors based on index
@@ -28,32 +32,50 @@ class NoteCardWidget extends StatelessWidget {
     final time = DateFormat.yMMMd().format(note.createdTime);
     final minHeight = getMinHeight(index);
 
-    return Card(
-      color: color,
-      child: Container(
-        constraints: BoxConstraints(minHeight: minHeight),
-        padding: EdgeInsets.all(8),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              time,
-              style: TextStyle(color: Colors.grey.shade700),
-            ),
-            SizedBox(height: 4),
-            Text(
-              note.title,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+    if (removeWhitespace(note.title) != '' ||
+        removeWhitespace(note.description) != '') {
+      return Card(
+        color: color,
+        child: Container(
+          constraints: BoxConstraints(minHeight: minHeight),
+          padding: EdgeInsets.all(8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                time,
+                style: TextStyle(color: Colors.grey.shade700),
               ),
-            ),
-          ],
+              SizedBox(height: 4),
+              if (removeWhitespace(note.title) != '')
+                Text(
+                  note.title,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              if (removeWhitespace(note.description)  != '')
+                Text(
+                  note.description,
+                  maxLines: 8,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                  ),
+                ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    } else
+      return Container(
+        width: 0,
+        height: 0,
+      );
   }
 
   /// To return different height for different widgets
