@@ -40,7 +40,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          actions: [editButton(), deleteButton()],
+          actions: [editButton()],
         ),
         body: isLoading
             ? Center(child: CircularProgressIndicator())
@@ -84,14 +84,5 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
         refreshNote();
       });
 
-  Widget deleteButton() => IconButton(
-        icon: Icon(Icons.delete),
-        onPressed: () async {
-          
-
-          await NotesDatabase.instance.delete(widget.noteId);
-
-          Navigator.of(context).pop();
-        },
-      );
+  
 }
