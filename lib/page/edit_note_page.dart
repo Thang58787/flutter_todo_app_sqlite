@@ -93,7 +93,9 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
     await NotesDatabase.instance.create(note);
   }
 
-  Widget deleteButton() => IconButton(
+  Widget deleteButton() { 
+    if(widget.note != null) {
+    return IconButton(
         icon: Icon(Icons.delete),
         onPressed: () async {
           
@@ -102,5 +104,5 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
 
           Navigator.of(context).pop();
         },
-      );
+      );} else return Container(width: 0, height: 0,);}
 }
