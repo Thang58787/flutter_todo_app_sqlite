@@ -14,14 +14,14 @@ class NoteFields {
 
 class Note {
   final int? id;
-  final String title;
-  final String description;
+  final String? title;
+  final String? description;
   final DateTime createdTime;
 
   const Note({
     this.id,
-    required this.title,
-    required this.description,
+    this.title,
+    this.description,
     required this.createdTime,
   });
 
