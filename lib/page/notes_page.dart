@@ -3,6 +3,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:sqflite_database_example/db/notes_database.dart';
 import 'package:sqflite_database_example/model/note.dart';
 import 'package:sqflite_database_example/page/edit_note_page.dart';
+import 'package:sqflite_database_example/page/search_note_page.dart';
 import 'package:sqflite_database_example/page/settings_page.dart';
 import 'package:sqflite_database_example/widget/note_card_widget.dart';
 
@@ -75,7 +76,18 @@ class _NotesPageState extends State<NotesPage> {
             'Notes',
             style: TextStyle(fontSize: 24),
           ),
-          actions: [Icon(Icons.search), SizedBox(width: 12)],
+          actions: [
+            TextButton(
+                onPressed: () async {
+                  await Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => SearchNotePage()),
+                  );
+
+                  refreshNotes();
+                },
+                child: Icon(Icons.search)),
+            SizedBox(width: 12)
+          ],
         ),
         body: SafeArea(
           child: Center(

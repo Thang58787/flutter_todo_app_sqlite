@@ -5,6 +5,7 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
+  # flutter_search_bar: ^2.1.0
   flutter:
     sdk: flutter
 
