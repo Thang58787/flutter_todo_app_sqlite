@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite_database_example/db/notes_database.dart';
 import 'package:sqflite_database_example/model/note.dart';
+import 'package:sqflite_database_example/page/notes_page.dart';
 import 'package:sqflite_database_example/widget/note_form_widget.dart';
 
 class AddEditNotePage extends StatefulWidget {
@@ -19,6 +20,12 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
   late String title;
   late String description;
 
+  // Future refreshNotes() async {
+  //   setState(() => isLoading = true);
+  //   this.notes = await NotesDatabase.instance.readAllNotes();
+  //   setState(() => isLoading = false);
+  // }
+
   @override
   void initState() {
     super.initState();
@@ -28,18 +35,27 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          actions: [buildButton(), deleteButton()],
-        ),
-        body: Form(
-          key: _formKey,
-          child: NoteFormWidget(
-            title: title,
-            description: description,
-            onChangedTitle: (title) => setState(() => this.title = title),
-            onChangedDescription: (description) =>
-                setState(() => this.description = description),
+  Widget build(BuildContext context) => WillPopScope(
+        onWillPop: () async {
+          addOrUpdateNote();
+          await Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => NotesPage(),
+          ));
+          return true;
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            actions: [buildButton(), deleteButton()],
+          ),
+          body: Form(
+            key: _formKey,
+            child: NoteFormWidget(
+              title: title,
+              description: description,
+              onChangedTitle: (title) => setState(() => this.title = title),
+              onChangedDescription: (description) =>
+                  setState(() => this.description = description),
+            ),
           ),
         ),
       );
@@ -93,16 +109,20 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
     await NotesDatabase.instance.create(note);
   }
 
-  Widget deleteButton() { 
-    if(widget.note != null) {
-    return IconButton(
+  Widget deleteButton() {
+    if (widget.note != null) {
+      return IconButton(
         icon: Icon(Icons.delete),
         onPressed: () async {
-          
-
           await NotesDatabase.instance.delete(widget.note!.id!);
 
           Navigator.of(context).pop();
         },
-      );} else return Container(width: 0, height: 0,);}
+      );
+    } else
+      return Container(
+        width: 0,
+        height: 0,
+      );
+  }
 }

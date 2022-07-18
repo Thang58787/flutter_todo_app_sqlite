@@ -30,11 +30,15 @@ class _NotesPageState extends State<NotesPage> {
 
   //   super.dispose();
   // }
+  void setStateIfMounted(f) {
+    if (mounted) setState(f);
+  }
 
   Future refreshNotes() async {
-    setState(() => isLoading = true);
+    setStateIfMounted(() => isLoading = true);
     this.notes = await NotesDatabase.instance.readAllNotes();
-    setState(() => isLoading = false);
+    if (!mounted) return;
+    setStateIfMounted(() => isLoading = false);
   }
 
   @override
