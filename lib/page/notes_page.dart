@@ -3,6 +3,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:sqflite_database_example/db/notes_database.dart';
 import 'package:sqflite_database_example/model/note.dart';
 import 'package:sqflite_database_example/page/edit_note_page.dart';
+import 'package:sqflite_database_example/page/settings_page.dart';
 import 'package:sqflite_database_example/widget/note_card_widget.dart';
 
 class NotesPage extends StatefulWidget {
@@ -38,22 +39,51 @@ class _NotesPageState extends State<NotesPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
+        drawer: SafeArea(
+          child: Drawer(
+            backgroundColor: Color.fromARGB(255, 28, 22, 1),
+            elevation: 5,
+            child: Column(
+              children: <Widget>[
+                SizedBox(height: 30),
+                ListTile(
+                  title: new Text(
+                    "Settings",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  leading: new Icon(
+                    Icons.settings,
+                    color: Colors.white,
+                  ),
+                  onTap: () async {
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => SettingsPage()),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
         appBar: AppBar(
+          // leading: TextButton(onPressed: () {}, child: Icon(Icons.segment)),
           title: Text(
             'Notes',
             style: TextStyle(fontSize: 24),
           ),
           actions: [Icon(Icons.search), SizedBox(width: 12)],
         ),
-        body: Center(
-          child: isLoading
-              ? CircularProgressIndicator()
-              : notes.isEmpty
-                  ? Text(
-                      'No Notes',
-                      style: TextStyle(color: Colors.white, fontSize: 24),
-                    )
-                  : buildNotes(),
+        body: SafeArea(
+          child: Center(
+            child: isLoading
+                ? CircularProgressIndicator()
+                : notes.isEmpty
+                    ? Text(
+                        'No Notes',
+                        style: TextStyle(color: Colors.white, fontSize: 24),
+                      )
+                    : buildNotes(),
+          ),
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.black,

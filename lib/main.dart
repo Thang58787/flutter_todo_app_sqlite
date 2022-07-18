@@ -4,7 +4,6 @@ import 'package:sqflite_database_example/page/notes_page.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //TODO: ???
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,

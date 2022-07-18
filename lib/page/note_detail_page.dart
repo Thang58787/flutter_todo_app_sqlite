@@ -62,7 +62,7 @@
 //                       DateFormat.yMMMd().format(note.createdTime),
 //                       style: TextStyle(color: Colors.white38),
 //                     ),
-//                     SizedBox(height: 8),
+//                     SizedBox(heigt: 8),
 //                     Text(
 //                       note.description,
 //                       style: TextStyle(color: Colors.white70, fontSize: 18),
@@ -78,7 +78,6 @@
 //         if (isLoading) return;
 
 //         await Navigator.of(context).push(MaterialPageRoute(
-//           builder: (context) => AddEditNotePage(note: note),
 //         ));
 
 //         refreshNote();
