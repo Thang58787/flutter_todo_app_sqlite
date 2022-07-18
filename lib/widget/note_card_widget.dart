@@ -33,7 +33,7 @@ class NoteCardWidget extends StatelessWidget {
     final minHeight = getMinHeight(index);
 
     if (removeWhitespace(note.title) != '' ||
-        removeWhitespace(note.description) != '') {
+        removeWhitespace(note.content) != '') {
       return Card(
         color: color,
         child: Container(
@@ -57,9 +57,9 @@ class NoteCardWidget extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-              if (removeWhitespace(note.description)  != '')
+              if (removeWhitespace(note.content)  != '')
                 Text(
-                  note.description,
+                  note.content,
                   maxLines: 8,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(

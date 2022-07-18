@@ -17,14 +17,14 @@ class AddEditNotePage extends StatefulWidget {
 class _AddEditNotePageState extends State<AddEditNotePage> {
   final _formKey = GlobalKey<FormState>();
   late String title;
-  late String description;
+  late String content;
 
   @override
   void initState() {
     super.initState();
 
     title = widget.note?.title ?? '';
-    description = widget.note?.description ?? '';
+    content = widget.note?.content ?? '';
   }
 
   @override
@@ -36,16 +36,16 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
           key: _formKey,
           child: NoteFormWidget(
             title: title,
-            description: description,
+            content: content,
             onChangedTitle: (title) => setState(() => this.title = title),
-            onChangedDescription: (description) =>
-                setState(() => this.description = description),
+            onChangedDescription: (content) =>
+                setState(() => this.content = content),
           ),
         ),
       );
 
   Widget buildButton() {
-    final isFormValid = title.isNotEmpty && description.isNotEmpty;
+    final isFormValid = title.isNotEmpty && content.isNotEmpty;
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
@@ -79,7 +79,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
   Future updateNote() async {
     final note = widget.note!.copy(
       title: title,
-      description: description,
+      content: content,
     );
     await NotesDatabase.instance.update(note);
   }
@@ -87,7 +87,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
   Future addNote() async {
     final note = Note(
       title: title,
-      description: description,
+      content: content,
       createdTime: DateTime.now(),
     );
     await NotesDatabase.instance.create(note);

@@ -33,7 +33,7 @@ class NotesDatabase {
 CREATE TABLE $tableNotes ( 
   ${NoteFields.id} $idType, 
   ${NoteFields.title} $textType,
-  ${NoteFields.description} $textType,
+  ${NoteFields.content} $textType,
   ${NoteFields.time} $textType
   )
 ''');
@@ -44,9 +44,9 @@ CREATE TABLE $tableNotes (
 
     // final json = note.toJson();
     // final columns =
-    //     '${NoteFields.title}, ${NoteFields.description}, ${NoteFields.time}';
+    //     '${NoteFields.title}, ${NoteFields.content}, ${NoteFields.time}';
     // final values =
-    //     '${json[NoteFields.title]}, ${json[NoteFields.description]}, ${json[NoteFields.time]}';
+    //     '${json[NoteFields.title]}, ${json[NoteFields.content]}, ${json[NoteFields.time]}';
     // final id = await db
     //     .rawInsert('INSERT INTO table_name ($columns) VALUES ($values)');
 

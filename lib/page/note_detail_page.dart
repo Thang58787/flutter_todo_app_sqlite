@@ -64,7 +64,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      note.description,
+                      note.content,
                       style: TextStyle(color: Colors.white70, fontSize: 18),
                     )
                   ],
