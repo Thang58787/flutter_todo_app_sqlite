@@ -34,7 +34,7 @@ class NoteFormWidget extends StatelessWidget {
   Widget buildTitle() => TextFormField(
         minLines: 1,
         maxLines: 3,
-        initialValue: title,
+        initialValue: title?.trim().replaceAll("\n", " "),
         style: TextStyle(
           color: Colors.white70,
           fontWeight: FontWeight.bold,
