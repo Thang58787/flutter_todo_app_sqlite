@@ -30,7 +30,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          actions: [buildButton()],
+          actions: [buildButton(), deleteButton()],
         ),
         body: Form(
           key: _formKey,
@@ -92,4 +92,15 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
     );
     await NotesDatabase.instance.create(note);
   }
+
+  Widget deleteButton() => IconButton(
+        icon: Icon(Icons.delete),
+        onPressed: () async {
+          
+
+          await NotesDatabase.instance.delete(widget.note!.id!);
+
+          Navigator.of(context).pop();
+        },
+      );
 }
