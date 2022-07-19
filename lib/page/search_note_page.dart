@@ -1,4 +1,4 @@
-
+import 'package:animated_search_bar/animated_search_bar.dart';
 import 'package:flutter/material.dart';
 
 class SearchNotePage extends StatefulWidget {
@@ -11,33 +11,35 @@ class SearchNotePage extends StatefulWidget {
 
 
 class _SearchNotePageState extends State<SearchNotePage> {
-
-  // late SearchBar searchBar;
+  String searchText = "";
   
-  // AppBar buildAppBar(BuildContext context) {
-  //   return new AppBar(
-  //     title: new Text('My Home Page'),
-  //     actions: [searchBar.getSearchAction(context)]
-  //   );
-  // }  
-  
-  // _MyHomePageState() {
-  //   searchBar = new SearchBar(
-  //     inBar: false,
-  //     setState: setState,
-  //     onSubmitted: print,
-  //     buildDefaultAppBar: buildAppBar,
-  //   );
-  // }
-  
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text('Hello'),
-      ),
-    );
+        appBar: AppBar(
+          title: AnimatedSearchBar(
+            label: "Search Something Here",
+            labelStyle: TextStyle(fontSize: 16),
+            searchStyle: TextStyle(color: Colors.white),
+            cursorColor: Colors.white,
+            searchDecoration: InputDecoration(
+              hintText: "Search",
+              alignLabelWithHint: true,
+              fillColor: Colors.white,
+              focusColor: Colors.white,
+              hintStyle: TextStyle(color: Colors.white70),
+              border: InputBorder.none,
+            ),
+            onChanged: (value) {
+              print("value on Change");
+              setState(() {
+                searchText = value;
+              });
+            },
+          ),
+        ),
+        
+      );
     // return new Scaffold(
     //   appBar: searchBar.build(context)
     // );
