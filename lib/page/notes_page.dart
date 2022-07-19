@@ -23,14 +23,14 @@ class _NotesPageState extends State<NotesPage> {
     refreshNotes();
   }
 
-  // @override
-  // void dispose() {
-  //   NotesDatabase database = NotesDatabase();
+  @override
+  void dispose() {
 
-  //   database.close();
+    NotesDatabase.instance.close();
 
-  //   super.dispose();
-  // }
+    super.dispose();
+  }
+
   void setStateIfMounted(f) {
     if (mounted) setState(f);
   }
