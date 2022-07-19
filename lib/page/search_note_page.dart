@@ -18,6 +18,7 @@ class SearchNotePage extends StatefulWidget {
   
 class _SearchNotePageState extends State<SearchNotePage> {
   late List<Note> notes;
+  late List<Note> allNotes = notes;
   String searchText = "";
   bool isLoading = false;
 
@@ -35,6 +36,7 @@ class _SearchNotePageState extends State<SearchNotePage> {
   Future refreshNotes() async {
     setStateIfMounted(() => isLoading = true);
     this.notes = await NotesDatabase.instance.readAllNotes();
+    this.allNotes = this.notes;
     if (!mounted) return;
     setStateIfMounted(() => isLoading = false);
   }
@@ -80,7 +82,8 @@ class _SearchNotePageState extends State<SearchNotePage> {
   }
 
   void searchNote(String value) {
-    List<Note> filtedNotes = notes.where((note) => note.title != '').toList();
+    
+    List<Note> filtedNotes = allNotes.where((note) => note.title != '').toList();
     final suggestions = filtedNotes.where((note) {
       final noteTitle = note.title!.toLowerCase();
       final input = value.toLowerCase();
