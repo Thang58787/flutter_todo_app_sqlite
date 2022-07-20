@@ -82,13 +82,13 @@ class _SearchNotePageState extends State<SearchNotePage> {
   }
 
   void searchNote(String value) {
-    
-    List<Note> filtedNotes = allNotes.where((note) => note.title != '').toList();
-    final suggestions = filtedNotes.where((note) {
-      final noteTitle = note.title!.toLowerCase();
+    final suggestions = allNotes.where((note) {
+      final noteTitle = note.title?.toLowerCase();
+      final noteDescription = note.description?.toLowerCase();
+      String? noteContent = '$noteTitle $noteDescription';
       final input = value.toLowerCase();
 
-      return noteTitle.contains(input);
+      return noteContent.contains(input);
       
       
     }).toList();

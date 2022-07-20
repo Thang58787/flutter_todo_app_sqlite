@@ -93,6 +93,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
   }
 
   Future updateNote() async {
+
     final note = widget.note!.copy(
       title: title,
       description: description,
@@ -101,6 +102,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
   }
 
   Future addNote() async {
+    
     final note = Note(
       title: title,
       description: description,

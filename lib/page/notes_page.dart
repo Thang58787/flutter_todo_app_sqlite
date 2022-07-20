@@ -40,6 +40,7 @@ class _NotesPageState extends State<NotesPage> {
     this.notes = await NotesDatabase.instance.readAllNotes();
     if (!mounted) return;
     setStateIfMounted(() => isLoading = false);
+    
   }
 
   @override
