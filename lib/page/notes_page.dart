@@ -19,7 +19,6 @@ class _NotesPageState extends State<NotesPage> {
   @override
   void initState() {
     super.initState();
-
     refreshNotes();
   }
 
@@ -36,10 +35,13 @@ class _NotesPageState extends State<NotesPage> {
   }
 
   Future refreshNotes() async {
+    NotesDatabase.instance.deleteEmptyNotes();
+
     setStateIfMounted(() => isLoading = true);
     this.notes = await NotesDatabase.instance.readAllNotes();
     if (!mounted) return;
     setStateIfMounted(() => isLoading = false);
+
     
   }
 

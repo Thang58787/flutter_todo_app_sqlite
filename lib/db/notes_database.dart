@@ -104,6 +104,15 @@ CREATE TABLE $tableNotes (
     );
   }
 
+  Future<void> deleteEmptyNotes() async {
+    final db = await instance.database;
+    await db.rawDelete('''
+     DELETE FROM $tableNotes 
+    where REPLACE (${NoteFields.description}, ' ', '' ) IS '' 
+    AND REPLACE (${NoteFields.title}, ' ', '' ) IS ''
+''');
+  }
+
   Future close() async {
     final db = await instance.database;
 

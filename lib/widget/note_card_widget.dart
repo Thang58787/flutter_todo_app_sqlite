@@ -32,8 +32,8 @@ class NoteCardWidget extends StatelessWidget {
     final time = DateFormat.yMMMd().format(note.createdTime);
     final minHeight = getMinHeight(index);
 
-    if (removeWhitespace(note.title) != '' ||
-        removeWhitespace(note.description) != '') {
+    // if (removeWhitespace(note.title) != '' ||
+    //     removeWhitespace(note.description) != '') {
       return Card(
         color: color,
         child: Container(
@@ -71,12 +71,13 @@ class NoteCardWidget extends StatelessWidget {
           ),
         ),
       );
-    } else
-      return Container(
-        width: 0,
-        height: 0,
-      );
-  }
+    } 
+  //   else 
+  //     return Container(
+  //       width: 0,
+  //       height: 0,
+  //     );
+  // }
 
   /// To return different height for different widgets
   double getMinHeight(int index) {
