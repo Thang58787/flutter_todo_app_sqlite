@@ -43,7 +43,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
         },
         child: Scaffold(
           appBar: AppBar(
-            actions: [buildButton(), deleteButton()],
+            actions: [buildSaveButton(), buildDeleteButton()],
           ),
           body: Form(
             key: _formKey,
@@ -58,7 +58,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
         ),
       );
 
-  Widget buildButton() {
+  Widget buildSaveButton() {
     // final isFormValid = title.isNotEmpty && description.isNotEmpty;
 
     return Padding(
@@ -68,7 +68,10 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
           onPrimary: Colors.white,
           // primary: isFormValid ? null : Colors.grey.shade700,
         ),
-        onPressed: () {addOrUpdateNote(); Navigator.of(context).pop();},
+        onPressed: () {
+          addOrUpdateNote();
+          Navigator.of(context).pop();
+        },
         child: Text('Save'),
       ),
     );
@@ -91,7 +94,6 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
   }
 
   Future updateNote() async {
-
     final note = widget.note!.copy(
       title: title,
       description: description,
@@ -100,7 +102,6 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
   }
 
   Future addNote() async {
-    
     final note = Note(
       title: title,
       description: description,
@@ -109,17 +110,12 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
     await NotesDatabase.instance.create(note);
   }
 
-  Widget deleteButton() {
+  Widget buildDeleteButton() {
     if (widget.note != null) {
       return IconButton(
         icon: Icon(Icons.delete),
         onPressed: () async {
-          await NotesDatabase.instance.delete(widget.note!.id!);
-
-          await Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => NotesPage(),
-          ));
-          // Navigator.of(context).pop();
+          await showDeleteNoteDialog();
         },
       );
     } else
@@ -127,5 +123,30 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
         width: 0,
         height: 0,
       );
+  }
+
+  showDeleteNoteDialog() async {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          backgroundColor: Color.fromARGB(133, 191, 189, 189),
+              title: Text('Do you want to delete this note?', style: TextStyle(color: Colors.white)),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('NO' ,style: TextStyle(color: Colors.green),)),
+                TextButton(
+                    onPressed: () async {
+                      await NotesDatabase.instance.delete(widget.note!.id!);
+                      await Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => NotesPage(),
+                      ));
+                      // Navigator.of(context).pop();
+                    },
+                    child: Text('YES', style: TextStyle(color: Colors.red),)),
+              ],
+            ));
   }
 }
