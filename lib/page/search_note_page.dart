@@ -1,4 +1,3 @@
-import 'package:animated_search_bar/animated_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:sqflite_database_example/db/notes_database.dart';
@@ -9,18 +8,16 @@ import 'package:sqflite_database_example/widget/note_card_widget.dart';
 class SearchNotePage extends StatefulWidget {
   SearchNotePage({Key? key}) : super(key: key);
 
-
-  
   @override
   State<SearchNotePage> createState() => _SearchNotePageState();
 }
 
-  
 class _SearchNotePageState extends State<SearchNotePage> {
   late List<Note> notes;
   late List<Note> allNotes = notes;
   String searchText = "";
   bool isLoading = false;
+  final controller = TextEditingController();
 
   @override
   void initState() {
@@ -45,36 +42,37 @@ class _SearchNotePageState extends State<SearchNotePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: AnimatedSearchBar(
-          label: "Search Something Here",
-          labelStyle: TextStyle(fontSize: 16),
-          searchStyle: TextStyle(color: Colors.white),
-          cursorColor: Colors.white,
-          searchDecoration: InputDecoration(
-            hintText: "Search",
-            alignLabelWithHint: true,
-            fillColor: Colors.white,
-            focusColor: Colors.white,
-            hintStyle: TextStyle(color: Colors.white70),
+        title: TextField(
+          autofocus: true,
+          style: TextStyle(color: Colors.white),
+          controller: controller,
+          decoration: InputDecoration(
             border: InputBorder.none,
+            focusColor: Color.fromARGB(57, 255, 255, 255),
+            hintText: 'Search Notes',
+            hintStyle: TextStyle(color: Color.fromARGB(106, 255, 255, 255)),
+            suffixIcon: IconButton(
+              onPressed: controller.clear,
+              icon: Icon(
+                Icons.clear,
+                color: Color.fromARGB(175, 255, 255, 255),
+                size: 18,
+              ),
+            ),
           ),
-          onChanged: (value) {
-            searchNote(value);
-          },
+          onChanged: searchNote,
         ),
       ),
       body: SafeArea(
-          child: Center(
+        child: Center(
             child: isLoading
                 ? CircularProgressIndicator()
                 : notes.isEmpty
-                    ? Text(
-                        'No Notes',
-                        style: TextStyle(color: Colors.white, fontSize: 24),
-                      )
-                    : buildNotes(),
-          ),
-        ),
+                    ? Container()
+                    : controller.text != ''
+                        ? buildNotes()
+                        : buildEmptySearch()),
+      ),
     );
     // return new Scaffold(
     //   appBar: searchBar.build(context)
@@ -89,13 +87,11 @@ class _SearchNotePageState extends State<SearchNotePage> {
       final input = value.toLowerCase();
 
       return noteContent.contains(input);
-      
-      
     }).toList();
 
     setState(() => notes = suggestions);
   }
-  
+
   Widget buildNotes() => StaggeredGridView.countBuilder(
         padding: EdgeInsets.all(8),
         itemCount: notes.length,
@@ -118,4 +114,8 @@ class _SearchNotePageState extends State<SearchNotePage> {
           );
         },
       );
+
+  Widget buildEmptySearch() {
+    return Container();
+  }
 }
