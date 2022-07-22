@@ -43,7 +43,11 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
         },
         child: Scaffold(
           appBar: AppBar(
-            actions: [buildSaveButton(), buildDeleteButton()],
+            actions: [
+              buildFindButton(),
+              buildDeleteButton(),
+              buildSaveButton()
+            ],
           ),
           body: Form(
             key: _formKey,
@@ -129,14 +133,18 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          backgroundColor: Color.fromARGB(133, 191, 189, 189),
-              title: Text('Do you want to delete this note?', style: TextStyle(color: Colors.white)),
+              backgroundColor: Color.fromARGB(133, 191, 189, 189),
+              title: Text('Do you want to delete this note?',
+                  style: TextStyle(color: Colors.white)),
               actions: [
                 TextButton(
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: Text('NO' ,style: TextStyle(color: Colors.green),)),
+                    child: Text(
+                      'NO',
+                      style: TextStyle(color: Colors.green),
+                    )),
                 TextButton(
                     onPressed: () async {
                       await NotesDatabase.instance.delete(widget.note!.id!);
@@ -145,8 +153,18 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
                       ));
                       // Navigator.of(context).pop();
                     },
-                    child: Text('YES', style: TextStyle(color: Colors.red),)),
+                    child: Text(
+                      'YES',
+                      style: TextStyle(color: Colors.red),
+                    )),
               ],
             ));
+  }
+
+  buildFindButton() {
+    return TextButton(
+      onPressed: () {},
+      child: Icon(Icons.search, color: Colors.white,)
+    );
   }
 }
