@@ -48,74 +48,93 @@ class _NotesPageState extends State<NotesPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         drawer: SafeArea(
-          child: Drawer(
-            backgroundColor: Color.fromARGB(255, 28, 22, 1),
-            elevation: 5,
-            child: Column(
-              children: <Widget>[
-                SizedBox(height: 30),
-                ListTile(
-                  title: new Text(
-                    "Settings",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  leading: new Icon(
-                    Icons.settings,
-                    color: Colors.white,
-                  ),
-                  onTap: () async {
-                    await Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => SettingsPage()),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
+          child: _buildDrawer(context),
         ),
-        appBar: AppBar(
-          // leading: TextButton(onPressed: () {}, child: Icon(Icons.segment)),
-          title: Text(
-            'Notes',
-            style: TextStyle(fontSize: 24),
-          ),
-          actions: [
-            TextButton(
-                onPressed: () async {
-                  await Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => SearchNotePage()),
-                  );
+        appBar: _buildAppBar(context),
+        body: _buildBody(),
+        floatingActionButton: _buildFloatingActionButton(context),
+      );
 
-                  refreshNotes();
-                },
-                child: Icon(Icons.search)),
-            SizedBox(width: 12)
-          ],
-        ),
-        body: SafeArea(
-          child: Center(
-            child: isLoading
-                ? CircularProgressIndicator()
-                : notes.isEmpty
-                    ? Text(
-                        'No Notes',
-                        style: TextStyle(color: Colors.white, fontSize: 24),
-                      )
-                    : buildNotes(),
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.black,
-          child: Icon(Icons.add),
-          onPressed: () async {
-            await Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => AddEditNotePage()),
-            );
+  FloatingActionButton _buildFloatingActionButton(BuildContext context) {
+    return FloatingActionButton(
+        backgroundColor: Colors.black,
+        child: Icon(Icons.add),
+        onPressed: () async {
+          await Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => AddEditNotePage()),
+          );
 
-            refreshNotes();
-          },
+          refreshNotes();
+        },
+      );
+  }
+
+  SafeArea _buildBody() {
+    return SafeArea(
+        child: Center(
+          child: isLoading
+              ? CircularProgressIndicator()
+              : notes.isEmpty
+                  ? Text(
+                      'No Notes',
+                      style: TextStyle(color: Colors.white, fontSize: 24),
+                    )
+                  : buildNotes(),
         ),
       );
+  }
+
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(
+        title: Text(
+          'Notes',
+          style: TextStyle(fontSize: 24),
+        ),
+        actions: [
+          buildSearchButton(context),
+          SizedBox(width: 12)
+        ],
+      );
+  }
+
+  Drawer _buildDrawer(BuildContext context) {
+    return Drawer(
+          backgroundColor: Color.fromARGB(255, 28, 22, 1),
+          elevation: 5,
+          child: Column(
+            children: <Widget>[
+              SizedBox(height: 30),
+              ListTile(
+                title: new Text(
+                  "Settings",
+                  style: TextStyle(color: Colors.white),
+                ),
+                leading: new Icon(
+                  Icons.settings,
+                  color: Colors.white,
+                ),
+                onTap: () async {
+                  await Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => SettingsPage()),
+                  );
+                },
+              ),
+            ],
+          ),
+        );
+  }
+
+  TextButton buildSearchButton(BuildContext context) {
+    return TextButton(
+              onPressed: () async {
+                await Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => SearchNotePage()),
+                );
+
+                refreshNotes();
+              },
+              child: Icon(Icons.search));
+  }
 
   Widget buildNotes() => StaggeredGridView.countBuilder(
         padding: EdgeInsets.all(8),
