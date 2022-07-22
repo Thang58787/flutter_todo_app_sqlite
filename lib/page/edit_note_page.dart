@@ -38,9 +38,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
   Widget build(BuildContext context) => WillPopScope(
         onWillPop: () async {
           addOrUpdateNote();
-          await Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => NotesPage(),
-          ));
+          Navigator.of(context).pop();
           return true;
         },
         child: Scaffold(
@@ -70,7 +68,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
           onPrimary: Colors.white,
           // primary: isFormValid ? null : Colors.grey.shade700,
         ),
-        onPressed: addOrUpdateNote,
+        onPressed: () {addOrUpdateNote(); Navigator.of(context).pop();},
         child: Text('Save'),
       ),
     );
@@ -88,7 +86,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
         await addNote();
       }
 
-      Navigator.of(context).pop();
+      // Navigator.of(context).pop();
     }
   }
 
@@ -118,7 +116,10 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
         onPressed: () async {
           await NotesDatabase.instance.delete(widget.note!.id!);
 
-          Navigator.of(context).pop();
+          await Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => NotesPage(),
+          ));
+          // Navigator.of(context).pop();
         },
       );
     } else
