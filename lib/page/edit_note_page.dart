@@ -44,7 +44,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
         child: Scaffold(
           appBar: AppBar(
             actions: [
-              buildFindButton(),
+              
               buildDeleteButton(),
               buildSaveButton()
             ],
@@ -161,10 +161,5 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
             ));
   }
 
-  buildFindButton() {
-    return TextButton(
-      onPressed: () {},
-      child: Icon(Icons.search, color: Colors.white,)
-    );
-  }
+  
 }
