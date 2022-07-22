@@ -24,9 +24,7 @@ class _NotesPageState extends State<NotesPage> {
 
   @override
   void dispose() {
-
     NotesDatabase.instance.close();
-
     super.dispose();
   }
 
@@ -36,13 +34,10 @@ class _NotesPageState extends State<NotesPage> {
 
   Future refreshNotes() async {
     NotesDatabase.instance.deleteEmptyNotes();
-
     setStateIfMounted(() => isLoading = true);
     this.notes = await NotesDatabase.instance.readAllNotes();
     if (!mounted) return;
     setStateIfMounted(() => isLoading = false);
-
-    
   }
 
   @override
@@ -57,83 +52,79 @@ class _NotesPageState extends State<NotesPage> {
 
   FloatingActionButton _buildFloatingActionButton(BuildContext context) {
     return FloatingActionButton(
-        backgroundColor: Colors.black,
-        child: Icon(Icons.add),
-        onPressed: () async {
-          await Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => AddEditNotePage()),
-          );
+      backgroundColor: Colors.black,
+      child: Icon(Icons.add),
+      onPressed: () async {
+        await Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => AddEditNotePage()),
+        );
 
-          refreshNotes();
-        },
-      );
+        refreshNotes();
+      },
+    );
   }
 
   SafeArea _buildBody() {
     return SafeArea(
-        child: Center(
-          child: isLoading
-              ? CircularProgressIndicator()
-              : notes.isEmpty
-                  ? Text(
-                      'No Notes',
-                      style: TextStyle(color: Colors.white, fontSize: 24),
-                    )
-                  : buildNotes(),
-        ),
-      );
+      child: Center(
+        child: isLoading
+            ? CircularProgressIndicator()
+            : notes.isEmpty
+                ? Text(
+                    'No Notes',
+                    style: TextStyle(color: Colors.white, fontSize: 24),
+                  )
+                : buildNotes(),
+      ),
+    );
   }
 
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
-        title: Text(
-          'Notes',
-          style: TextStyle(fontSize: 24),
-        ),
-        actions: [
-          buildSearchButton(context),
-          SizedBox(width: 12)
-        ],
-      );
+      title: Text(
+        'Notes',
+        style: TextStyle(fontSize: 24),
+      ),
+      actions: [buildSearchButton(context), SizedBox(width: 12)],
+    );
   }
 
   Drawer _buildDrawer(BuildContext context) {
     return Drawer(
-          backgroundColor: Color.fromARGB(255, 28, 22, 1),
-          elevation: 5,
-          child: Column(
-            children: <Widget>[
-              SizedBox(height: 30),
-              ListTile(
-                title: new Text(
-                  "Settings",
-                  style: TextStyle(color: Colors.white),
-                ),
-                leading: new Icon(
-                  Icons.settings,
-                  color: Colors.white,
-                ),
-                onTap: () async {
-                  await Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => SettingsPage()),
-                  );
-                },
-              ),
-            ],
+      backgroundColor: Color.fromARGB(255, 28, 22, 1),
+      elevation: 5,
+      child: Column(
+        children: <Widget>[
+          SizedBox(height: 30),
+          ListTile(
+            title: new Text(
+              "Settings",
+              style: TextStyle(color: Colors.white),
+            ),
+            leading: new Icon(
+              Icons.settings,
+              color: Colors.white,
+            ),
+            onTap: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => SettingsPage()),
+              );
+            },
           ),
-        );
+        ],
+      ),
+    );
   }
 
   TextButton buildSearchButton(BuildContext context) {
     return TextButton(
-              onPressed: () async {
-                await Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => SearchNotePage()),
-                );
-
-                refreshNotes();
-              },
-              child: Icon(Icons.search));
+        onPressed: () async {
+          await Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => SearchNotePage()),
+          );
+          refreshNotes();
+        },
+        child: Icon(Icons.search));
   }
 
   Widget buildNotes() => StaggeredGridView.countBuilder(
@@ -145,7 +136,6 @@ class _NotesPageState extends State<NotesPage> {
         crossAxisSpacing: 4,
         itemBuilder: (context, index) {
           final note = notes[index];
-
           return GestureDetector(
             onTap: () async {
               await Navigator.of(context).push(MaterialPageRoute(
