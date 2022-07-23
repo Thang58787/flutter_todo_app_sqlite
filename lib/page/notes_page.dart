@@ -17,10 +17,9 @@ class _NotesPageState extends State<NotesPage> {
   late List<Note> notes;
   bool isLoading = false;
 
-  List<int> selectedItemIndex = [];
+  List<int> _selectedItemIndex = [];
   bool isMultiSelectionMode = false;
-  bool? isVisible = true;
-  bool? isTransparent = false;
+  bool? _isVisible = true;
 
   @override
   void initState() {
@@ -90,7 +89,7 @@ class _NotesPageState extends State<NotesPage> {
       leading: isMultiSelectionMode
           ? IconButton(
               onPressed: () {
-                selectedItemIndex.clear();
+                _selectedItemIndex.clear();
                 isMultiSelectionMode = false;
                 setState(() {});
               },
@@ -193,24 +192,27 @@ class _NotesPageState extends State<NotesPage> {
   }
 
   String getSelectedItemCount() {
-    return selectedItemIndex.isNotEmpty
-        ? selectedItemIndex.length.toString() + " item selected"
+    return _selectedItemIndex.isNotEmpty
+        ? _selectedItemIndex.length.toString() + " item selected"
         : "No item selected";
   }
 
   void doMultiSelection(int index) {
     final note = notes[index];
     if (isMultiSelectionMode) {
-      if (selectedItemIndex.contains(index)) {
-        selectedItemIndex.remove(index);
+      if (_selectedItemIndex.contains(index)) {
+        _selectedItemIndex.remove(index);
         note.isSelected = false; 
       } else {
-        selectedItemIndex.add(index);
+        _selectedItemIndex.add(index);
         note.isSelected = true;
+      }
+      if(_selectedItemIndex.isEmpty) {
+        isMultiSelectionMode = false; 
       }
       setState(() {});
     } else {
-      //Other logic
+      
     }
   }
 }
