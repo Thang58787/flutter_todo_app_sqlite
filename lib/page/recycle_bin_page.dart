@@ -2,24 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:sqflite_database_example/db/notes_database.dart';
 import 'package:sqflite_database_example/model/note.dart';
-import 'package:sqflite_database_example/page/edit_note_page.dart';
-import 'package:sqflite_database_example/page/recycle_bin_page.dart';
-import 'package:sqflite_database_example/page/search_note_page.dart';
-import 'package:sqflite_database_example/page/settings_page.dart';
+import 'package:sqflite_database_example/page/note_preview_page.dart';
 import 'package:sqflite_database_example/widget/note_card_widget.dart';
 
-class NotesPage extends StatefulWidget {
+
+
+class RecycleBinPage extends StatefulWidget {
+
+  const RecycleBinPage({Key? key}) : super(key: key);
+
   @override
-  _NotesPageState createState() => _NotesPageState();
+  State<RecycleBinPage> createState() => _RecycleBinPageState();
 }
 
-class _NotesPageState extends State<NotesPage> {
+class _RecycleBinPageState extends State<RecycleBinPage> {
   final key = GlobalKey<ScaffoldState>();
-  late List<Note> notes;
+  List<Note> notesInRecycleBin = [];
   bool isLoading = false;
 
-  List<int> selectedItemIndex = [];
   bool isMultiSelectionMode = false;
+  List<int> selectedItemIndex = [];
   bool? isVisible = true;
 
   @override
@@ -41,36 +43,18 @@ class _NotesPageState extends State<NotesPage> {
   Future refreshNotes() async {
     NotesDatabase.instance.deleteEmptyNotes();
     setStateIfMounted(() => isLoading = true);
-    this.notes = await NotesDatabase.instance.readAllNotes();
+    this.notesInRecycleBin = await NotesDatabase.instance.readAllNotesInRecycleBin();
     if (!mounted) return;
     setStateIfMounted(() => isLoading = false);
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        drawer: SafeArea(
-          child: buildDrawer(context),
-        ),
         appBar: buildAppBar(context),
         body: buildBody(),
-        floatingActionButton: buildFloatingActionButton(context),
       );
-
-  FloatingActionButton buildFloatingActionButton(BuildContext context) {
-    return FloatingActionButton(
-      backgroundColor: Colors.black,
-      child: Icon(Icons.add),
-      onPressed: () async {
-        await Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => AddEditNotePage()),
-        );
-
-        refreshNotes();
-      },
-    );
-  }
-
-AppBar buildAppBar(BuildContext context) {
+  
+  AppBar buildAppBar(BuildContext context) {
     return AppBar(
       leading: isMultiSelectionMode
           ? IconButton(
@@ -82,7 +66,7 @@ AppBar buildAppBar(BuildContext context) {
               icon: Icon(Icons.close))
           : null,
       title: Text(
-        isMultiSelectionMode ? getSelectedItemCount() : 'Notes',
+        isMultiSelectionMode ? getSelectedItemCount() : 'Recycle Bin',
         style: TextStyle(fontSize: 24),
       ),
       actions: [
@@ -104,7 +88,7 @@ AppBar buildAppBar(BuildContext context) {
       child: Center(
         child: isLoading
             ? CircularProgressIndicator()
-            : notes.isEmpty
+            : notesInRecycleBin.isEmpty
                 ? Text(
                     'No Notes',
                     style: TextStyle(color: Colors.white, fontSize: 24),
@@ -114,68 +98,15 @@ AppBar buildAppBar(BuildContext context) {
     );
   }
 
-  Drawer buildDrawer(BuildContext context) {
-    return Drawer(
-      backgroundColor: Color.fromARGB(255, 28, 22, 1),
-      elevation: 5,
-      child: Column(
-        children: <Widget>[
-          SizedBox(height: 30),
-          ListTile(
-            title: new Text(
-              "Settings",
-              style: TextStyle(color: Colors.white),
-            ),
-            leading: new Icon(
-              Icons.settings,
-              color: Colors.white,
-            ),
-            onTap: () async {
-              await Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => SettingsPage()),
-              );
-            },
-          ),
-          ListTile(
-            title: new Text(
-              "Recycle Bin",
-              style: TextStyle(color: Colors.white),
-            ),
-            leading: new Icon(
-              Icons.delete_outline,
-              color: Colors.white,
-            ),
-            onTap: () async {
-              await Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => RecycleBinPage()),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  TextButton buildSearchButton(BuildContext context) {
-    return TextButton(
-        onPressed: () async {
-          await Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => SearchNotePage()),
-          );
-          refreshNotes();
-        },
-        child: Icon(Icons.search));
-  }
-
   Widget buildNotes() => StaggeredGridView.countBuilder(
         padding: EdgeInsets.all(8),
-        itemCount: notes.length,
+        itemCount: notesInRecycleBin.length,
         staggeredTileBuilder: (index) => StaggeredTile.fit(2),
         crossAxisCount: 4,
         mainAxisSpacing: 4,
         crossAxisSpacing: 4,
         itemBuilder: (context, index) {
-          final note = notes[index];
+          final note = notesInRecycleBin[index];
           if (isMultiSelectionMode) {
             return GestureDetector(
               onTap: () {
@@ -191,7 +122,7 @@ AppBar buildAppBar(BuildContext context) {
               },
               onTap: () async {
                 await Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => AddEditNotePage(note: note),
+                  builder: (context) => NotePreviewPage(noteId: note.id!,),
                 ));
 
                 refreshNotes();
@@ -202,17 +133,29 @@ AppBar buildAppBar(BuildContext context) {
         },
       );
 
-  Widget buildDeleteButton() {
+      Widget buildDeleteButton() {
     return TextButton(
         onPressed: () {
           for (int index in selectedItemIndex) {
-            NotesDatabase.instance.delete(notes[index].id!);
+            NotesDatabase.instance.delete(notesInRecycleBin[index].id!);
           }
           isMultiSelectionMode = false;
           refreshNotes();
           setState(() {});
         },
         child: Icon(Icons.delete));
+  }
+
+  TextButton buildSearchButton(BuildContext context) {
+    return TextButton(
+        // onPressed: () async {
+        //   await Navigator.of(context).push(
+        //     MaterialPageRoute(builder: (context) => SearchNotePage()),
+        //   );
+        //   refreshNotes();
+        // },
+        onPressed: () {},
+        child: Icon(Icons.search));
   }
 
   String getSelectedItemCount() {
@@ -222,7 +165,7 @@ AppBar buildAppBar(BuildContext context) {
   }
 
   void doMultiSelection(int index) {
-    final note = notes[index];
+    final note = notesInRecycleBin[index];
     if (isMultiSelectionMode) {
       if (selectedItemIndex.contains(index)) {
         selectedItemIndex.remove(index);
@@ -237,4 +180,5 @@ AppBar buildAppBar(BuildContext context) {
       setState(() {});
     } else {}
   }
+
 }

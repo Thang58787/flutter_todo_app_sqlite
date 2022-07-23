@@ -12,7 +12,7 @@ class NotesDatabase {
   Future<Database> get database async {
     if (_database != null) return _database!;
 
-    _database = await _initDB('notes_database.db');
+    _database = await _initDB('notes_database2.db');
     return _database!;
   }
 
@@ -34,7 +34,8 @@ CREATE TABLE $tableNotes (
   ${NoteFields.id} $idType, 
   ${NoteFields.title} $textType,
   ${NoteFields.description} $textType,
-  ${NoteFields.time} $textType
+  ${NoteFields.time} $textType,
+  ${NoteFields.isInRecycleBin} $boolType
   )
 ''');
   }
@@ -78,7 +79,19 @@ CREATE TABLE $tableNotes (
     // final result =
     //     await db.rawQuery('SELECT * FROM $tableNotes ORDER BY $orderBy');
 
-    final result = await db.query(tableNotes, orderBy: orderBy);
+    final result = await db.query(tableNotes, orderBy: orderBy, where: '${NoteFields.isInRecycleBin} = false');
+    
+    return result.map((json) => Note.fromJson(json)).toList();
+  }
+
+  Future<List<Note>> readAllNotesInRecycleBin() async {
+    final db = await instance.database;
+
+    final orderBy = '${NoteFields.time} ASC';
+    // final result =
+    //     await db.rawQuery('SELECT * FROM $tableNotes ORDER BY $orderBy');
+
+    final result = await db.query(tableNotes, orderBy: orderBy, where: '${NoteFields.isInRecycleBin} = true');
     
     return result.map((json) => Note.fromJson(json)).toList();
   }
