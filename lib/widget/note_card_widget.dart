@@ -16,10 +16,12 @@ class NoteCardWidget extends StatelessWidget {
     Key? key,
     required this.note,
     required this.index,
+    this.isTransparent = false,
   }) : super(key: key);
 
   final Note note;
   final int index;
+  bool? isTransparent = false;
 
   String? removeWhitespace(String? str) {
     return str?.replaceAll(' ', '');
@@ -28,7 +30,7 @@ class NoteCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     /// Pick colors from the accent colors based on index
-    final color = _lightColors[index % _lightColors.length];
+    final color = (isTransparent = true) ? _lightColors[index % _lightColors.length] : _lightColors[index % _lightColors.length].withOpacity(0.6);
     final time = DateFormat.yMMMd().format(note.createdTime);
     final minHeight = getMinHeight(index);
 

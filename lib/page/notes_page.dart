@@ -13,8 +13,14 @@ class NotesPage extends StatefulWidget {
 }
 
 class _NotesPageState extends State<NotesPage> {
+  final key = GlobalKey<ScaffoldState>();
   late List<Note> notes;
   bool isLoading = false;
+
+  List<int> selectedItemIndex = [];
+  bool isMultiSelectionMode = false;
+  bool? isVisible = true;
+  bool? isTransparent = false;
 
   @override
   void initState() {
@@ -81,11 +87,31 @@ class _NotesPageState extends State<NotesPage> {
 
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
+      leading: isMultiSelectionMode
+          ? IconButton(
+              onPressed: () {
+                selectedItemIndex.clear();
+                isMultiSelectionMode = false;
+                setState(() {});
+              },
+              icon: Icon(Icons.close))
+          : null,
       title: Text(
-        'Notes',
+        isMultiSelectionMode ? getSelectedItemCount() : 'Notes',
         style: TextStyle(fontSize: 24),
       ),
-      actions: [buildSearchButton(context), SizedBox(width: 12)],
+      actions: [
+        
+        Visibility(
+          child: buildDeleteButton(),
+          visible: isMultiSelectionMode == true,
+        ),
+        Visibility(
+          child: buildSearchButton(context),
+          visible: isMultiSelectionMode == false,
+        ),
+        SizedBox(width: 12)
+      ],
     );
   }
 
@@ -136,16 +162,59 @@ class _NotesPageState extends State<NotesPage> {
         crossAxisSpacing: 4,
         itemBuilder: (context, index) {
           final note = notes[index];
-          return GestureDetector(
-            onTap: () async {
-              await Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => AddEditNotePage(note: note),
-              ));
+          if (isMultiSelectionMode == true) {
+            return GestureDetector(
+              onTap: () {
+                doMultiSelection(index);
+              },
+              child: NoteCardWidget(note: note, index: index),
+            );
+          } else {
+            return GestureDetector(
+              onLongPress: () {
+                isMultiSelectionMode = true;
+                doMultiSelection(index);
+              },
+              onTap: () async {
+                await Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => AddEditNotePage(note: note),
+                ));
 
-              refreshNotes();
-            },
-            child: NoteCardWidget(note: note, index: index),
-          );
+                refreshNotes();
+              },
+              child: NoteCardWidget(note: note, index: index),
+            );
+          }
         },
       );
+
+  Widget buildDeleteButton() {
+    return TextButton(onPressed: () {}, child: Icon(Icons.delete));
+  }
+
+  String getSelectedItemCount() {
+    return selectedItemIndex.isNotEmpty
+        ? selectedItemIndex.length.toString() + " item selected"
+        : "No item selected";
+  }
+
+  void doMultiSelection(int index) {
+    final note = notes[index];
+    if (isMultiSelectionMode == true) {
+      if (selectedItemIndex.contains(index)) {
+        selectedItemIndex.remove(index);
+        // setState(() {
+        //   NoteCardWidget(note: note, index: index, isTransparent: false,);
+        // });
+      } else {
+        selectedItemIndex.add(index);
+        // setState(() {
+        //   NoteCardWidget(note: note, index: index, isTransparent: true,);
+        // });
+      }
+      setState(() {});
+    } else {
+      //Other logic
+    }
+  }
 }
