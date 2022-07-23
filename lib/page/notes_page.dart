@@ -104,7 +104,7 @@ class _NotesPageState extends State<NotesPage> {
         
         Visibility(
           child: buildDeleteButton(),
-          visible: isMultiSelectionMode == true,
+          visible: isMultiSelectionMode,
         ),
         Visibility(
           child: buildSearchButton(context),
@@ -162,7 +162,7 @@ class _NotesPageState extends State<NotesPage> {
         crossAxisSpacing: 4,
         itemBuilder: (context, index) {
           final note = notes[index];
-          if (isMultiSelectionMode == true) {
+          if (isMultiSelectionMode) {
             return GestureDetector(
               onTap: () {
                 doMultiSelection(index);
@@ -200,17 +200,13 @@ class _NotesPageState extends State<NotesPage> {
 
   void doMultiSelection(int index) {
     final note = notes[index];
-    if (isMultiSelectionMode == true) {
+    if (isMultiSelectionMode) {
       if (selectedItemIndex.contains(index)) {
         selectedItemIndex.remove(index);
-        // setState(() {
-        //   NoteCardWidget(note: note, index: index, isTransparent: false,);
-        // });
+        note.isSelected = false; 
       } else {
         selectedItemIndex.add(index);
-        // setState(() {
-        //   NoteCardWidget(note: note, index: index, isTransparent: true,);
-        // });
+        note.isSelected = true;
       }
       setState(() {});
     } else {

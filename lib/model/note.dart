@@ -17,12 +17,14 @@ class Note {
   final String? title;
   final String? description;
   final DateTime createdTime;
+  bool? isSelected;
 
-  const Note({
+  Note({
     this.id,
     this.title,
     this.description,
     required this.createdTime,
+    this.isSelected = false,
   });
 
   Note copy({
