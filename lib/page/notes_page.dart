@@ -100,7 +100,6 @@ class _NotesPageState extends State<NotesPage> {
         style: TextStyle(fontSize: 24),
       ),
       actions: [
-        
         Visibility(
           child: buildDeleteButton(),
           visible: isMultiSelectionMode,
@@ -188,7 +187,16 @@ class _NotesPageState extends State<NotesPage> {
       );
 
   Widget buildDeleteButton() {
-    return TextButton(onPressed: () {}, child: Icon(Icons.delete));
+    return TextButton(
+        onPressed: () {
+          for (int index in _selectedItemIndex) {
+            NotesDatabase.instance.delete(notes[index].id!);
+          }
+          isMultiSelectionMode = false;
+          refreshNotes();
+          setState(() {});
+        },
+        child: Icon(Icons.delete));
   }
 
   String getSelectedItemCount() {
@@ -202,17 +210,15 @@ class _NotesPageState extends State<NotesPage> {
     if (isMultiSelectionMode) {
       if (_selectedItemIndex.contains(index)) {
         _selectedItemIndex.remove(index);
-        note.isSelected = false; 
+        note.isSelected = false;
       } else {
         _selectedItemIndex.add(index);
         note.isSelected = true;
       }
-      if(_selectedItemIndex.isEmpty) {
-        isMultiSelectionMode = false; 
+      if (_selectedItemIndex.isEmpty) {
+        isMultiSelectionMode = false;
       }
       setState(() {});
-    } else {
-      
-    }
+    } else {}
   }
 }
