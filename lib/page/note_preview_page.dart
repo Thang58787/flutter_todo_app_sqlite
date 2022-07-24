@@ -33,7 +33,11 @@ class _NoteDetailPageState extends State<NotePreviewPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        
+        // appBar: AppBar(
+        //   actions: [
+        //     buildDeleteButton();
+        //   ],
+        // ),
         body: isLoading
             ? Center(child: CircularProgressIndicator())
             : Padding(
@@ -63,8 +67,26 @@ class _NoteDetailPageState extends State<NotePreviewPage> {
                 ),
               ),
       );
+      
+    //   Widget buildDeleteButton() {
+    // if (widget.note != null) {
+    //   return IconButton(
+    //     icon: Icon(Icons.delete),
+    //     onPressed: () async {
+    //       await showDeleteNoteDialog();
+    //     },
+    //   );
+    // } else {
+    //   return Container(
+    //     width: 0,
+    //     height: 0,
+    //   );}
+      
+
+      
+  }
 
 
 
   
-}
+

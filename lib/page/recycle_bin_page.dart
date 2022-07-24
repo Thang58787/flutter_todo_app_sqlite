@@ -3,12 +3,10 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:sqflite_database_example/db/notes_database.dart';
 import 'package:sqflite_database_example/model/note.dart';
 import 'package:sqflite_database_example/page/note_preview_page.dart';
+import 'package:sqflite_database_example/page/notes_page.dart';
 import 'package:sqflite_database_example/widget/note_card_widget.dart';
 
-
-
 class RecycleBinPage extends StatefulWidget {
-
   const RecycleBinPage({Key? key}) : super(key: key);
 
   @override
@@ -43,7 +41,8 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
   Future refreshNotes() async {
     NotesDatabase.instance.deleteEmptyNotes();
     setStateIfMounted(() => isLoading = true);
-    this.notesInRecycleBin = await NotesDatabase.instance.readAllNotesInRecycleBin();
+    this.notesInRecycleBin =
+        await NotesDatabase.instance.readAllNotesInRecycleBin();
     if (!mounted) return;
     setStateIfMounted(() => isLoading = false);
   }
@@ -53,7 +52,7 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
         appBar: buildAppBar(context),
         body: buildBody(),
       );
-  
+
   AppBar buildAppBar(BuildContext context) {
     return AppBar(
       leading: isMultiSelectionMode
@@ -64,7 +63,13 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
                 setState(() {});
               },
               icon: Icon(Icons.close))
-          : null,
+          : BackButton(
+              onPressed: () async {
+                await Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => NotesPage(),
+                ));
+              },
+            ),
       title: Text(
         isMultiSelectionMode ? getSelectedItemCount() : 'Recycle Bin',
         style: TextStyle(fontSize: 24),
@@ -122,7 +127,9 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
               },
               onTap: () async {
                 await Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => NotePreviewPage(noteId: note.id!,),
+                  builder: (context) => NotePreviewPage(
+                    noteId: note.id!,
+                  ),
                 ));
 
                 refreshNotes();
@@ -133,7 +140,7 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
         },
       );
 
-      Widget buildDeleteButton() {
+  Widget buildDeleteButton() {
     return TextButton(
         onPressed: () {
           for (int index in selectedItemIndex) {
@@ -180,5 +187,4 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
       setState(() {});
     } else {}
   }
-
 }

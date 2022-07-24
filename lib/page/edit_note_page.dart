@@ -134,7 +134,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
         context: context,
         builder: (context) => AlertDialog(
               backgroundColor: Color.fromARGB(133, 191, 189, 189),
-              title: Text('Do you want to delete this note?',
+              title: Text('Do you want to move this note to recycle bin?',
                   style: TextStyle(color: Colors.white)),
               actions: [
                 TextButton(
@@ -147,11 +147,17 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
                     )),
                 TextButton(
                     onPressed: () async {
-                      await NotesDatabase.instance.delete(widget.note!.id!);
+                      // await NotesDatabase.instance.delete(widget.note!.id!);
+                      widget.note!.isInRecycleBin = true;
+                      NotesDatabase.instance.update(widget.note!);
                       await Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => NotesPage(),
                       ));
-                      // Navigator.of(context).pop();
+                      // Navigator.pop(context);
+                      setState(() {
+                        
+                      });
+                      
                     },
                     child: Text(
                       'YES',

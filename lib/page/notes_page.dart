@@ -204,13 +204,16 @@ AppBar buildAppBar(BuildContext context) {
 
   Widget buildDeleteButton() {
     return TextButton(
-        onPressed: () {
+        onPressed: () async {
           for (int index in selectedItemIndex) {
-            NotesDatabase.instance.delete(notes[index].id!);
+            // NotesDatabase.instance.delete(notes[index].id!);
+            notes[index].isInRecycleBin = true;
+            await NotesDatabase.instance.update(notes[index]);
           }
           isMultiSelectionMode = false;
-          refreshNotes();
           setState(() {});
+          refreshNotes();
+          
         },
         child: Icon(Icons.delete));
   }
@@ -237,4 +240,6 @@ AppBar buildAppBar(BuildContext context) {
       setState(() {});
     } else {}
   }
+
+
 }
