@@ -4,6 +4,7 @@ import 'package:sqflite_database_example/db/notes_database.dart';
 import 'package:sqflite_database_example/model/note.dart';
 import 'package:sqflite_database_example/page/note_preview_page.dart';
 import 'package:sqflite_database_example/page/notes_page.dart';
+import 'package:sqflite_database_example/page/recycle_bin_search_note_page.dart';
 import 'package:sqflite_database_example/widget/note_card_widget.dart';
 
 class RecycleBinPage extends StatefulWidget {
@@ -159,13 +160,12 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
 
   TextButton buildSearchButton(BuildContext context) {
     return TextButton(
-        // onPressed: () async {
-        //   await Navigator.of(context).push(
-        //     MaterialPageRoute(builder: (context) => SearchNotePage()),
-        //   );
-        //   refreshNotes();
-        // },
-        onPressed: () {},
+        onPressed: () async {
+          await Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => RecycleBinSearchNotePage()),
+          );
+          refreshNotes();
+        },
         child: Icon(Icons.search, color: Colors.white,));
   }
 
