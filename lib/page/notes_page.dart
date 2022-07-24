@@ -77,6 +77,7 @@ AppBar buildAppBar(BuildContext context) {
               onPressed: () {
                 selectedItemIndex.clear();
                 isMultiSelectionMode = false;
+                refreshNotes();
                 setState(() {});
               },
               icon: Icon(Icons.close))
@@ -164,7 +165,7 @@ AppBar buildAppBar(BuildContext context) {
           );
           refreshNotes();
         },
-        child: Icon(Icons.search));
+        child: Icon(Icons.search, color: Colors.white,));
   }
 
   Widget buildNotes() => StaggeredGridView.countBuilder(
@@ -215,7 +216,7 @@ AppBar buildAppBar(BuildContext context) {
           refreshNotes();
           
         },
-        child: Icon(Icons.delete));
+        child: Icon(Icons.delete, color: Colors.white,));
   }
 
   String getSelectedItemCount() {

@@ -62,7 +62,7 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
                 isMultiSelectionMode = false;
                 setState(() {});
               },
-              icon: Icon(Icons.close))
+              icon: Icon(Icons.close, color: Colors.white,))
           : BackButton(
               onPressed: () async {
                 await Navigator.of(context).push(MaterialPageRoute(
@@ -75,6 +75,10 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
         style: TextStyle(fontSize: 24),
       ),
       actions: [
+        Visibility(
+          child: buidRecycleButton(),
+          visible: isMultiSelectionMode,
+        ),
         Visibility(
           child: buildDeleteButton(),
           visible: isMultiSelectionMode,
@@ -150,7 +154,7 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
           refreshNotes();
           setState(() {});
         },
-        child: Icon(Icons.delete));
+        child: Icon(Icons.delete, color: Colors.white,));
   }
 
   TextButton buildSearchButton(BuildContext context) {
@@ -162,7 +166,7 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
         //   refreshNotes();
         // },
         onPressed: () {},
-        child: Icon(Icons.search));
+        child: Icon(Icons.search, color: Colors.white,));
   }
 
   String getSelectedItemCount() {
@@ -186,5 +190,22 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
       }
       setState(() {});
     } else {}
+  }
+  
+  buidRecycleButton() {
+    return TextButton(
+      onPressed: () async {
+          for (int index in selectedItemIndex) {
+            // NotesDatabase.instance.delete(notes[index].id!);
+            notesInRecycleBin[index].isInRecycleBin = false;
+            await NotesDatabase.instance.update(notesInRecycleBin[index]);
+          }
+          isMultiSelectionMode = false;
+          setState(() {});
+          refreshNotes();
+          
+        },
+      child: Icon(Icons.recycling, color: Colors.white,)
+    );
   }
 }
