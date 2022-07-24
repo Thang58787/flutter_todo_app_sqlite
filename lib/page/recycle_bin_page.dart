@@ -61,6 +61,7 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
               onPressed: () {
                 selectedItemIndex.clear();
                 isMultiSelectionMode = false;
+                refreshNotes();
                 setState(() {});
               },
               icon: Icon(Icons.close, color: Colors.white,))
@@ -171,7 +172,7 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
 
   String getSelectedItemCount() {
     return selectedItemIndex.isNotEmpty
-        ? selectedItemIndex.length.toString() + " item selected"
+        ? selectedItemIndex.length.toString()
         : "No item selected";
   }
 
