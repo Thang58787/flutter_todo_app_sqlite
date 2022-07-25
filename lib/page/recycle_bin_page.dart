@@ -113,7 +113,7 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
             ? CircularProgressIndicator()
             : notesInRecycleBin.isEmpty
                 ? Text(
-                    'No Notes',
+                    'Recycle bin is empty',
                     style: TextStyle(color: Colors.white, fontSize: 24),
                   )
                 : buildNotes(),

@@ -115,7 +115,7 @@ class _ImportantNotesPageState extends State<ImportantNotesPage> {
             ? CircularProgressIndicator()
             : notes.isEmpty
                 ? Text(
-                    'No Notes',
+                    'No Important Notes',
                     style: TextStyle(color: Colors.white, fontSize: 24),
                   )
                 : buildNotes(),
