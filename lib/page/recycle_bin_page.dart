@@ -3,11 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:sqflite_database_example/db/notes_database.dart';
 import 'package:sqflite_database_example/model/note.dart';
-import 'package:sqflite_database_example/page/important_notes_page.dart';
 import 'package:sqflite_database_example/page/note_preview_page.dart';
-import 'package:sqflite_database_example/page/notes_page.dart';
 import 'package:sqflite_database_example/page/recycle_bin_search_note_page.dart';
-import 'package:sqflite_database_example/page/settings_page.dart';
+import 'package:sqflite_database_example/widget/drawer_widget.dart';
 import 'package:sqflite_database_example/widget/note_card_widget.dart';
 
 class RecycleBinPage extends StatefulWidget {
@@ -58,7 +56,7 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
           return true;
         },
         child: Scaffold(
-          drawer: SafeArea(child: buildDrawer(context)),
+          drawer: DrawerWidget(),
           appBar: buildAppBar(context),
           body: buildBody(),
         ),
@@ -231,75 +229,4 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
         ));
   }
 
-  Drawer buildDrawer(BuildContext context) {
-    return Drawer(
-      backgroundColor: Color.fromARGB(255, 28, 22, 1),
-      elevation: 5,
-      child: Column(
-        children: <Widget>[
-          SizedBox(height: 30),
-          ListTile(
-            title: new Text(
-              "Home",
-              style: TextStyle(color: Colors.white),
-            ),
-            leading: new Icon(
-              Icons.home,
-              color: Colors.white,
-            ),
-            onTap: () async {
-              await Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => NotesPage()),
-              );
-            },
-          ),
-          ListTile(
-            title: new Text(
-              "Recycle Bin",
-              style: TextStyle(color: Colors.white),
-            ),
-            leading: new Icon(
-              Icons.delete_outline,
-              color: Colors.white,
-            ),
-            onTap: () async {
-              await Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => RecycleBinPage()),
-              );
-            },
-          ),
-          ListTile(
-            title: new Text(
-              "Important",
-              style: TextStyle(color: Colors.white),
-            ),
-            leading: new Icon(
-              Icons.star,
-              color: Colors.white,
-            ),
-            onTap: () async {
-              await Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => ImportantNotesPage()),
-              );
-            },
-          ),
-          ListTile(
-            title: new Text(
-              "Settings",
-              style: TextStyle(color: Colors.white),
-            ),
-            leading: new Icon(
-              Icons.settings,
-              color: Colors.white,
-            ),
-            onTap: () async {
-              await Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => SettingsPage()),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
 }
