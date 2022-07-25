@@ -44,7 +44,6 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
         child: Scaffold(
           appBar: AppBar(
             actions: [
-              
               buildDeleteButton(),
               buildSaveButton()
             ],
@@ -166,6 +165,8 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
               ],
             ));
   }
+  
+  
 
   
 }

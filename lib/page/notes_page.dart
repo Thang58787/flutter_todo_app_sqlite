@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:sqflite_database_example/db/notes_database.dart';
 import 'package:sqflite_database_example/model/note.dart';
 import 'package:sqflite_database_example/page/edit_note_page.dart';
+import 'package:sqflite_database_example/page/important_notes_page.dart';
 import 'package:sqflite_database_example/page/recycle_bin_page.dart';
 import 'package:sqflite_database_example/page/search_note_page.dart';
 import 'package:sqflite_database_example/page/settings_page.dart';
@@ -47,13 +49,19 @@ class _NotesPageState extends State<NotesPage> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        drawer: SafeArea(
-          child: buildDrawer(context),
+  Widget build(BuildContext context) => WillPopScope(
+        onWillPop: () async {
+          SystemNavigator.pop();
+          return true;
+        },
+        child: Scaffold(
+          drawer: SafeArea(
+            child: buildDrawer(context),
+          ),
+          appBar: buildAppBar(context),
+          body: buildBody(),
+          floatingActionButton: buildFloatingActionButton(context),
         ),
-        appBar: buildAppBar(context),
-        body: buildBody(),
-        floatingActionButton: buildFloatingActionButton(context),
       );
 
   FloatingActionButton buildFloatingActionButton(BuildContext context) {
@@ -70,7 +78,7 @@ class _NotesPageState extends State<NotesPage> {
     );
   }
 
-AppBar buildAppBar(BuildContext context) {
+  AppBar buildAppBar(BuildContext context) {
     return AppBar(
       leading: isMultiSelectionMode
           ? IconButton(
@@ -87,6 +95,10 @@ AppBar buildAppBar(BuildContext context) {
         style: TextStyle(fontSize: 24),
       ),
       actions: [
+        Visibility(
+          child: buildImportantButton(),
+          visible: isMultiSelectionMode,
+        ),
         Visibility(
           child: buildDeleteButton(),
           visible: isMultiSelectionMode,
@@ -124,16 +136,16 @@ AppBar buildAppBar(BuildContext context) {
           SizedBox(height: 30),
           ListTile(
             title: new Text(
-              "Settings",
+              "Home",
               style: TextStyle(color: Colors.white),
             ),
             leading: new Icon(
-              Icons.settings,
+              Icons.home,
               color: Colors.white,
             ),
             onTap: () async {
               await Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => SettingsPage()),
+                MaterialPageRoute(builder: (context) => NotesPage()),
               );
             },
           ),
@@ -152,6 +164,36 @@ AppBar buildAppBar(BuildContext context) {
               );
             },
           ),
+          ListTile(
+            title: new Text(
+              "Important",
+              style: TextStyle(color: Colors.white),
+            ),
+            leading: new Icon(
+              Icons.star,
+              color: Colors.white,
+            ),
+            onTap: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => ImportantNotesPage()),
+              );
+            },
+          ),
+          ListTile(
+            title: new Text(
+              "Settings",
+              style: TextStyle(color: Colors.white),
+            ),
+            leading: new Icon(
+              Icons.settings,
+              color: Colors.white,
+            ),
+            onTap: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => SettingsPage()),
+              );
+            },
+          ),
         ],
       ),
     );
@@ -165,7 +207,10 @@ AppBar buildAppBar(BuildContext context) {
           );
           refreshNotes();
         },
-        child: Icon(Icons.search, color: Colors.white,));
+        child: Icon(
+          Icons.search,
+          color: Colors.white,
+        ));
   }
 
   Widget buildNotes() => StaggeredGridView.countBuilder(
@@ -214,14 +259,16 @@ AppBar buildAppBar(BuildContext context) {
           isMultiSelectionMode = false;
           setState(() {});
           refreshNotes();
-          
         },
-        child: Icon(Icons.delete, color: Colors.white,));
+        child: Icon(
+          Icons.delete,
+          color: Colors.white,
+        ));
   }
 
   String getSelectedItemCount() {
     return selectedItemIndex.isNotEmpty
-        ? selectedItemIndex.length.toString() + " item selected"
+        ? selectedItemIndex.length.toString()
         : "No item selected";
   }
 
@@ -242,5 +289,21 @@ AppBar buildAppBar(BuildContext context) {
     } else {}
   }
 
-
+  Widget buildImportantButton() {
+    return TextButton(
+        onPressed: () async {
+          for (int index in selectedItemIndex) {
+            // NotesDatabase.instance.delete(notes[index].id!);
+            notes[index].isImportant = true;
+            await NotesDatabase.instance.update(notes[index]);
+          }
+          isMultiSelectionMode = false;
+          setState(() {});
+          refreshNotes();
+        },
+        child: Icon(
+          Icons.star,
+          color: Colors.white,
+        ));
+  }
 }

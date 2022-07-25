@@ -12,7 +12,7 @@ class NotesDatabase {
   Future<Database> get database async {
     if (_database != null) return _database!;
 
-    _database = await _initDB('notes_database2.db');
+    _database = await _initDB('notes_database4.db');
     return _database!;
   }
 
@@ -35,7 +35,9 @@ CREATE TABLE $tableNotes (
   ${NoteFields.title} $textType,
   ${NoteFields.description} $textType,
   ${NoteFields.time} $textType,
-  ${NoteFields.isInRecycleBin} $boolType
+  ${NoteFields.isInRecycleBin} $boolType,
+  ${NoteFields.isImportant} $boolType
+  
   )
 ''');
   }
@@ -96,6 +98,18 @@ CREATE TABLE $tableNotes (
     return result.map((json) => Note.fromJson(json)).toList();
   }
 
+  Future<List<Note>> readAllImportantNotes() async {
+    final db = await instance.database;
+
+    final orderBy = '${NoteFields.time} ASC';
+    // final result =
+    //     await db.rawQuery('SELECT * FROM $tableNotes ORDER BY $orderBy');
+
+    final result = await db.query(tableNotes, orderBy: orderBy, where: '${NoteFields.isImportant} = true');
+    
+    return result.map((json) => Note.fromJson(json)).toList();
+  }
+
   Future<int> update(Note note) async {
     final db = await instance.database;
 
@@ -106,6 +120,8 @@ CREATE TABLE $tableNotes (
       whereArgs: [note.id],
     );
   }
+
+  
 
   Future<int> delete(int id) async {
     final db = await instance.database;

@@ -3,27 +3,25 @@ import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:sqflite_database_example/db/notes_database.dart';
 import 'package:sqflite_database_example/model/note.dart';
-import 'package:sqflite_database_example/page/important_notes_page.dart';
-import 'package:sqflite_database_example/page/note_preview_page.dart';
+import 'package:sqflite_database_example/page/edit_note_page.dart';
 import 'package:sqflite_database_example/page/notes_page.dart';
-import 'package:sqflite_database_example/page/recycle_bin_search_note_page.dart';
+import 'package:sqflite_database_example/page/recycle_bin_page.dart';
+import 'package:sqflite_database_example/page/search_note_page.dart';
 import 'package:sqflite_database_example/page/settings_page.dart';
 import 'package:sqflite_database_example/widget/note_card_widget.dart';
 
-class RecycleBinPage extends StatefulWidget {
-  const RecycleBinPage({Key? key}) : super(key: key);
-
+class ImportantNotesPage extends StatefulWidget {
   @override
-  State<RecycleBinPage> createState() => _RecycleBinPageState();
+  _ImportantNotesPageState createState() => _ImportantNotesPageState();
 }
 
-class _RecycleBinPageState extends State<RecycleBinPage> {
+class _ImportantNotesPageState extends State<ImportantNotesPage> {
   final key = GlobalKey<ScaffoldState>();
-  List<Note> notesInRecycleBin = [];
+  late List<Note> notes;
   bool isLoading = false;
 
-  bool isMultiSelectionMode = false;
   List<int> selectedItemIndex = [];
+  bool isMultiSelectionMode = false;
   bool? isVisible = true;
 
   @override
@@ -45,8 +43,7 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
   Future refreshNotes() async {
     NotesDatabase.instance.deleteEmptyNotes();
     setStateIfMounted(() => isLoading = true);
-    this.notesInRecycleBin =
-        await NotesDatabase.instance.readAllNotesInRecycleBin();
+    this.notes = await NotesDatabase.instance.readAllImportantNotes();
     if (!mounted) return;
     setStateIfMounted(() => isLoading = false);
   }
@@ -58,11 +55,28 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
           return true;
         },
         child: Scaffold(
-          drawer: SafeArea(child: buildDrawer(context)),
+          drawer: SafeArea(
+            child: buildDrawer(context),
+          ),
           appBar: buildAppBar(context),
           body: buildBody(),
+          floatingActionButton: buildFloatingActionButton(context),
         ),
       );
+
+  FloatingActionButton buildFloatingActionButton(BuildContext context) {
+    return FloatingActionButton(
+      backgroundColor: Colors.black,
+      child: Icon(Icons.add),
+      onPressed: () async {
+        await Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => AddEditNotePage()),
+        );
+
+        refreshNotes();
+      },
+    );
+  }
 
   AppBar buildAppBar(BuildContext context) {
     return AppBar(
@@ -74,25 +88,15 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
                 refreshNotes();
                 setState(() {});
               },
-              icon: Icon(
-                Icons.close,
-                color: Colors.white,
-              ))
+              icon: Icon(Icons.close))
           : null,
-      // : BackButton(
-      //     onPressed: () async {
-      //       await Navigator.of(context).push(MaterialPageRoute(
-      //         builder: (context) => NotesPage(),
-      //       ));
-      //     },
-      //   ),
       title: Text(
-        isMultiSelectionMode ? getSelectedItemCount() : 'Recycle Bin',
+        isMultiSelectionMode ? getSelectedItemCount() : 'Important Notes',
         style: TextStyle(fontSize: 24),
       ),
       actions: [
         Visibility(
-          child: buidRecycleButton(),
+          child: buildUnimportantButton(),
           visible: isMultiSelectionMode,
         ),
         Visibility(
@@ -113,7 +117,7 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
       child: Center(
         child: isLoading
             ? CircularProgressIndicator()
-            : notesInRecycleBin.isEmpty
+            : notes.isEmpty
                 ? Text(
                     'No Notes',
                     style: TextStyle(color: Colors.white, fontSize: 24),
@@ -121,114 +125,6 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
                 : buildNotes(),
       ),
     );
-  }
-
-  Widget buildNotes() => StaggeredGridView.countBuilder(
-        padding: EdgeInsets.all(8),
-        itemCount: notesInRecycleBin.length,
-        staggeredTileBuilder: (index) => StaggeredTile.fit(2),
-        crossAxisCount: 4,
-        mainAxisSpacing: 4,
-        crossAxisSpacing: 4,
-        itemBuilder: (context, index) {
-          final note = notesInRecycleBin[index];
-          if (isMultiSelectionMode) {
-            return GestureDetector(
-              onTap: () {
-                doMultiSelection(index);
-              },
-              child: NoteCardWidget(note: note, index: index),
-            );
-          } else {
-            return GestureDetector(
-              onLongPress: () {
-                isMultiSelectionMode = true;
-                doMultiSelection(index);
-              },
-              onTap: () async {
-                await Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => NotePreviewPage(
-                    noteId: note.id!,
-                  ),
-                ));
-
-                refreshNotes();
-              },
-              child: NoteCardWidget(note: note, index: index),
-            );
-          }
-        },
-      );
-
-  Widget buildDeleteButton() {
-    return TextButton(
-        onPressed: () {
-          for (int index in selectedItemIndex) {
-            NotesDatabase.instance.delete(notesInRecycleBin[index].id!);
-          }
-          isMultiSelectionMode = false;
-          refreshNotes();
-          setState(() {});
-        },
-        child: Icon(
-          Icons.delete,
-          color: Colors.white,
-        ));
-  }
-
-  TextButton buildSearchButton(BuildContext context) {
-    return TextButton(
-        onPressed: () async {
-          await Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => RecycleBinSearchNotePage()),
-          );
-          refreshNotes();
-        },
-        child: Icon(
-          Icons.search,
-          color: Colors.white,
-        ));
-  }
-
-  String getSelectedItemCount() {
-    return selectedItemIndex.isNotEmpty
-        ? selectedItemIndex.length.toString()
-        : "No item selected";
-  }
-
-  void doMultiSelection(int index) {
-    final note = notesInRecycleBin[index];
-    if (isMultiSelectionMode) {
-      if (selectedItemIndex.contains(index)) {
-        selectedItemIndex.remove(index);
-        note.isSelected = false;
-      } else {
-        selectedItemIndex.add(index);
-        note.isSelected = true;
-      }
-      if (selectedItemIndex.isEmpty) {
-        isMultiSelectionMode = false;
-      }
-      setState(() {});
-    } else {}
-  }
-
-  buidRecycleButton() {
-    return TextButton(
-        onPressed: () async {
-          for (int index in selectedItemIndex) {
-            // NotesDatabase.instance.delete(notes[index].id!);
-            notesInRecycleBin[index].isInRecycleBin = false;
-            await NotesDatabase.instance.update(notesInRecycleBin[index]);
-          }
-          isMultiSelectionMode = false;
-          setState(() {});
-          refreshNotes();
-        },
-        child: Icon(
-          Icons.recycling,
-          color: Colors.white,
-        ));
   }
 
   Drawer buildDrawer(BuildContext context) {
@@ -301,5 +197,113 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
         ],
       ),
     );
+  }
+
+  TextButton buildSearchButton(BuildContext context) {
+    return TextButton(
+        onPressed: () async {
+          await Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => SearchNotePage()),
+          );
+          refreshNotes();
+        },
+        child: Icon(
+          Icons.search,
+          color: Colors.white,
+        ));
+  }
+
+  Widget buildNotes() => StaggeredGridView.countBuilder(
+        padding: EdgeInsets.all(8),
+        itemCount: notes.length,
+        staggeredTileBuilder: (index) => StaggeredTile.fit(2),
+        crossAxisCount: 4,
+        mainAxisSpacing: 4,
+        crossAxisSpacing: 4,
+        itemBuilder: (context, index) {
+          final note = notes[index];
+          if (isMultiSelectionMode) {
+            return GestureDetector(
+              onTap: () {
+                doMultiSelection(index);
+              },
+              child: NoteCardWidget(note: note, index: index),
+            );
+          } else {
+            return GestureDetector(
+              onLongPress: () {
+                isMultiSelectionMode = true;
+                doMultiSelection(index);
+              },
+              onTap: () async {
+                await Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => AddEditNotePage(note: note),
+                ));
+
+                refreshNotes();
+              },
+              child: NoteCardWidget(note: note, index: index),
+            );
+          }
+        },
+      );
+
+  Widget buildDeleteButton() {
+    return TextButton(
+        onPressed: () async {
+          for (int index in selectedItemIndex) {
+            // NotesDatabase.instance.delete(notes[index].id!);
+            notes[index].isInRecycleBin = true;
+            await NotesDatabase.instance.update(notes[index]);
+          }
+          isMultiSelectionMode = false;
+          setState(() {});
+          refreshNotes();
+        },
+        child: Icon(
+          Icons.delete,
+          color: Colors.white,
+        ));
+  }
+
+  String getSelectedItemCount() {
+    return selectedItemIndex.isNotEmpty
+        ? selectedItemIndex.length.toString()
+        : "No item selected";
+  }
+
+  void doMultiSelection(int index) {
+    final note = notes[index];
+    if (isMultiSelectionMode) {
+      if (selectedItemIndex.contains(index)) {
+        selectedItemIndex.remove(index);
+        note.isSelected = false;
+      } else {
+        selectedItemIndex.add(index);
+        note.isSelected = true;
+      }
+      if (selectedItemIndex.isEmpty) {
+        isMultiSelectionMode = false;
+      }
+      setState(() {});
+    } else {}
+  }
+
+  Widget buildUnimportantButton() {
+    return TextButton(
+        onPressed: () async {
+          for (int index in selectedItemIndex) {
+            // NotesDatabase.instance.delete(notes[index].id!);
+            notes[index].isImportant = false;
+            await NotesDatabase.instance.update(notes[index]);
+          }
+          isMultiSelectionMode = false;
+          setState(() {});
+          refreshNotes();
+        },
+        child: Icon(
+          Icons.star_border,
+          color: Colors.white,
+        ));
   }
 }
