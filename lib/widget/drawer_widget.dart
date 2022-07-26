@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:sqflite_database_example/page/important_notes_page.dart';
 import 'package:sqflite_database_example/page/notes_page.dart';
 import 'package:sqflite_database_example/page/recycle_bin_page.dart';
-import 'package:sqflite_database_example/page/settings_page.dart';
 
 class DrawerWidget extends StatelessWidget {
   const DrawerWidget({Key? key}) : super(key: key);
@@ -33,21 +32,6 @@ class DrawerWidget extends StatelessWidget {
             ),
             ListTile(
               title: new Text(
-                "Recycle Bin",
-                style: TextStyle(color: Colors.white),
-              ),
-              leading: new Icon(
-                Icons.delete_outline,
-                color: Colors.white,
-              ),
-              onTap: () async {
-                await Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => RecycleBinPage()),
-                );
-              },
-            ),
-            ListTile(
-              title: new Text(
                 "Important",
                 style: TextStyle(color: Colors.white),
               ),
@@ -63,19 +47,35 @@ class DrawerWidget extends StatelessWidget {
             ),
             ListTile(
               title: new Text(
-                "Settings",
+                "Recycle Bin",
                 style: TextStyle(color: Colors.white),
               ),
               leading: new Icon(
-                Icons.settings,
+                Icons.delete_outline,
                 color: Colors.white,
               ),
               onTap: () async {
                 await Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                  MaterialPageRoute(builder: (context) => RecycleBinPage()),
                 );
               },
             ),
+            
+            // ListTile(
+            //   title: new Text(
+            //     "Settings",
+            //     style: TextStyle(color: Colors.white),
+            //   ),
+            //   leading: new Icon(
+            //     Icons.settings,
+            //     color: Colors.white,
+            //   ),
+            //   onTap: () async {
+            //     await Navigator.of(context).push(
+            //       MaterialPageRoute(builder: (context) => SettingsPage()),
+            //     );
+            //   },
+            // ),
           ],
         ),
       ),
