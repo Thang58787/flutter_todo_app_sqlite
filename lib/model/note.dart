@@ -57,7 +57,7 @@ class Note {
         title: json[NoteFields.title] as String,
         description: json[NoteFields.description] as String,
         createdTime: DateTime.parse(json[NoteFields.time] as String),
-        // isInRecycleBin: json[NoteFields.isInRecycleBin],
+        isImportant: json[NoteFields.isImportant] == 1 ? true : false,
       );
 
   Map<String, Object?> toJson() => {

@@ -19,12 +19,8 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
   final _formKey = GlobalKey<FormState>();
   late String title;
   late String description;
+  bool? isImportant;
 
-  // Future refreshNotes() async {
-  //   setState(() => isLoading = true);
-  //   this.notes = await NotesDatabase.instance.readAllNotes();
-  //   setState(() => isLoading = false);
-  // }
 
   @override
   void initState() {
@@ -32,6 +28,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
 
     title = widget.note?.title ?? '';
     description = widget.note?.description ?? '';
+    isImportant = widget.note?.isImportant ?? false;
   }
 
   @override
@@ -44,6 +41,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
         child: Scaffold(
           appBar: AppBar(
             actions: [
+              buildToggleImportanrButton(),
               buildDeleteButton(),
               buildSaveButton()
             ],
@@ -99,6 +97,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
     final note = widget.note!.copy(
       title: title,
       description: description,
+      isImportant: widget.note?.isImportant ?? false,
     );
     await NotesDatabase.instance.update(note);
   }
@@ -108,6 +107,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
       title: title,
       description: description,
       createdTime: DateTime.now(),
+      isImportant: widget.note?.isImportant ?? false,
     );
     await NotesDatabase.instance.create(note);
   }
@@ -163,6 +163,21 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
                     )),
               ],
             ));
+  }
+  
+  buildToggleImportanrButton() {
+    
+    return TextButton(
+      child: widget.note?.isImportant == true
+      ? Icon(Icons.star, color: Colors.white,)
+      : Icon(Icons.star_border, color: Colors.white),
+      onPressed: () {
+        widget.note!.isImportant = !widget.note!.isImportant!;
+        setState(() {
+          
+        });
+      }, 
+    );
   }
   
   
