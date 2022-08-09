@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '/db/notes_database.dart';
 import '/model/note.dart';
-import '/page/notes_page.dart';
 import '/widget/note_form_widget.dart';
 
 class AddEditNotePage extends StatefulWidget {
@@ -21,6 +21,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
   late String description;
   bool? isImportant;
 
+  FToast? fToast;
 
   @override
   void initState() {
@@ -29,6 +30,9 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
     title = widget.note?.title ?? '';
     description = widget.note?.description ?? '';
     isImportant = widget.note?.isImportant ?? false;
+
+    fToast = FToast();
+    fToast?.init(context);
   }
 
   @override
@@ -148,14 +152,9 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
                       // await NotesDatabase.instance.delete(widget.note!.id!);
                       widget.note!.isInRecycleBin = true;
                       NotesDatabase.instance.update(widget.note!);
-                      await Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => NotesPage(),
-                      ));
-                      // Navigator.pop(context);
-                      setState(() {
-                        
-                      });
-                      
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                      _showToast('Moved to Recycle Bin');
                     },
                     child: Text(
                       'YES',
@@ -164,23 +163,56 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
               ],
             ));
   }
-  
+
   buildToggleImportanrButton() {
-    
     return TextButton(
       child: widget.note?.isImportant == true
-      ? Icon(Icons.star, color: Colors.white,)
-      : Icon(Icons.star_border, color: Colors.white),
+          ? Icon(
+              Icons.star,
+              color: Colors.white,
+            )
+          : Icon(Icons.star_border, color: Colors.white),
       onPressed: () {
-        widget.note!.isImportant = !widget.note!.isImportant!;
         setState(() {
-          
+          widget.note!.isImportant = !widget.note!.isImportant!;
         });
-      }, 
+      },
     );
   }
-  
-  
 
-  
+  _showToast(String message) {
+    String thisMessage = message;
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: const Color.fromARGB(171, 0, 0, 0),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: 12.0,
+          ),
+          Text(
+            message,
+            style: TextStyle(color: Colors.white),
+          ),
+        ],
+      ),
+    );
+
+    // Custom Toast Position
+    fToast?.showToast(
+        child: toast,
+        toastDuration: const Duration(seconds: 2),
+        positionedToastBuilder: (context, child) {
+          return Positioned(
+            bottom: 100,
+            left: 16,
+            right: 16,
+            child: child,
+          );
+        });
+  }
 }

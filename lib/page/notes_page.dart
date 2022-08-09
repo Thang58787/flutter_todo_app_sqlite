@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '/db/notes_database.dart';
 import '/model/note.dart';
 import '/page/edit_note_page.dart';
@@ -22,10 +23,15 @@ class _NotesPageState extends State<NotesPage> {
   bool isMultiSelectionMode = false;
   bool? isVisible = true;
 
+  FToast? fToast;
+
   @override
   void initState() {
     super.initState();
     refreshNotes();
+
+    fToast = FToast();
+    fToast?.init(context);
   }
 
   @override
@@ -183,6 +189,7 @@ class _NotesPageState extends State<NotesPage> {
           isMultiSelectionMode = false;
           setState(() {});
           refreshNotes();
+          _showToast("Moved to Recycle Bin");
         },
         child: Icon(
           Icons.delete,
@@ -224,10 +231,47 @@ class _NotesPageState extends State<NotesPage> {
           isMultiSelectionMode = false;
           setState(() {});
           refreshNotes();
+          _showToast("Marked as important");
         },
         child: Icon(
           Icons.star,
           color: Colors.white,
         ));
+  }
+
+    _showToast(String message) {
+    String thisMessage = message;
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: const Color.fromARGB(171, 0, 0, 0),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: 12.0,
+          ),
+          Text(
+            message,
+            style: TextStyle(color: Colors.white),
+          ),
+        ],
+      ),
+    );
+
+    // Custom Toast Position
+    fToast?.showToast(
+        child: toast,
+        toastDuration: const Duration(seconds: 2),
+        positionedToastBuilder: (context, child) {
+          return Positioned(
+            bottom: 100,
+            left: 16,
+            right: 16,
+            child: child,
+          );
+        });
   }
 }
