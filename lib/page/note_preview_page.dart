@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sqflite_database_example/db/notes_database.dart';
-import 'package:sqflite_database_example/model/note.dart';
-import 'package:sqflite_database_example/page/recycle_bin_page.dart';
+import '/db/notes_database.dart';
+import '/model/note.dart';
+import '/page/recycle_bin_page.dart';
 
 class NotePreviewPage extends StatefulWidget {
   final int noteId;

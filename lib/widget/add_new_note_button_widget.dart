@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite_database_example/page/edit_note_page.dart';
+import '/page/edit_note_page.dart';
 
 class AddNewNoteButtonWidget extends StatelessWidget {
   const AddNewNoteButtonWidget({Key? key}) : super(key: key);

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:sqflite_database_example/db/notes_database.dart';
-import 'package:sqflite_database_example/model/note.dart';
-import 'package:sqflite_database_example/page/edit_note_page.dart';
-import 'package:sqflite_database_example/page/search_note_page.dart';
-import 'package:sqflite_database_example/widget/drawer_widget.dart';
-import 'package:sqflite_database_example/widget/note_card_widget.dart';
+import '/db/notes_database.dart';
+import '/model/note.dart';
+import '/page/edit_note_page.dart';
+import '/page/search_note_page.dart';
+import '/widget/drawer_widget.dart';
+import '/widget/note_card_widget.dart';
 
 class ImportantNotesPage extends StatefulWidget {
   @override

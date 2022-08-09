@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:sqflite_database_example/db/notes_database.dart';
-import 'package:sqflite_database_example/model/note.dart';
-import 'package:sqflite_database_example/page/edit_note_page.dart';
-import 'package:sqflite_database_example/widget/note_card_widget.dart';
+import '/db/notes_database.dart';
+import '/model/note.dart';
+import '/page/edit_note_page.dart';
+import '/widget/note_card_widget.dart';
 
 class SearchNotePage extends StatefulWidget {
   SearchNotePage({Key? key}) : super(key: key);

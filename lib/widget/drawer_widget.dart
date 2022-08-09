@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite_database_example/page/important_notes_page.dart';
-import 'package:sqflite_database_example/page/notes_page.dart';
-import 'package:sqflite_database_example/page/recycle_bin_page.dart';
+import '/page/important_notes_page.dart';
+import '/page/notes_page.dart';
+import '/page/recycle_bin_page.dart';
 
 class DrawerWidget extends StatelessWidget {
   const DrawerWidget({Key? key}) : super(key: key);

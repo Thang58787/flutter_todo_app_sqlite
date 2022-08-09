@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sqflite_database_example/page/notes_page.dart';
+import '/page/notes_page.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
