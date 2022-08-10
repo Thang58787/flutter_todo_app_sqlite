@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '/db/notes_database.dart';
 import '/model/note.dart';
 import '/page/note_preview_page.dart';
@@ -24,10 +25,15 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
   List<int> selectedItemIndex = [];
   bool? isVisible = true;
 
+  FToast? fToast;
+
   @override
   void initState() {
     super.initState();
     refreshNotes();
+
+    fToast = FToast();
+    fToast?.init(context);
   }
 
   @override
@@ -52,7 +58,7 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
   @override
   Widget build(BuildContext context) => WillPopScope(
         onWillPop: () async {
-          SystemNavigator.pop(); 
+          SystemNavigator.pop();
           return true;
         },
         child: Scaffold(
@@ -90,7 +96,7 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
       ),
       actions: [
         Visibility(
-          child: buidRecycleButton(),
+          child: buidRestoreButton(),
           visible: isMultiSelectionMode,
         ),
         Visibility(
@@ -161,12 +167,7 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
   Widget buildDeleteButton() {
     return TextButton(
         onPressed: () {
-          for (int index in selectedItemIndex) {
-            NotesDatabase.instance.delete(notesInRecycleBin[index].id!);
-          }
-          isMultiSelectionMode = false;
-          refreshNotes();
-          setState(() {});
+          showDeleteNoteDialog();
         },
         child: Icon(
           Icons.delete,
@@ -211,17 +212,10 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
     } else {}
   }
 
-  buidRecycleButton() {
+  buidRestoreButton() {
     return TextButton(
         onPressed: () async {
-          for (int index in selectedItemIndex) {
-            // NotesDatabase.instance.delete(notes[index].id!);
-            notesInRecycleBin[index].isInRecycleBin = false;
-            await NotesDatabase.instance.update(notesInRecycleBin[index]);
-          }
-          isMultiSelectionMode = false;
-          setState(() {});
-          refreshNotes();
+          showRestoreNoteDialog();
         },
         child: Icon(
           Icons.recycling,
@@ -229,4 +223,123 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
         ));
   }
 
+  showDeleteNoteDialog() async {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              backgroundColor: Color.fromARGB(255, 46, 46, 46),
+              title: Text(
+                  'Do you really want to pernamently delete selected notes?',
+                  style: TextStyle(color: Colors.white)),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      setState(() {
+                        selectedItemIndex.clear();
+                        isMultiSelectionMode = false;
+                        refreshNotes();
+                      });
+                    },
+                    child: Text(
+                      'NO',
+                      style: TextStyle(color: Colors.green),
+                    )),
+                TextButton(
+                    onPressed: () async {
+                      for (int index in selectedItemIndex) {
+                        NotesDatabase.instance.delete(notesInRecycleBin[index].id!);
+                      }
+                      Navigator.of(context).pop();
+                      isMultiSelectionMode = false;
+                      refreshNotes();
+                      setState(() {});
+                      showToast('Notes deleted');
+                    },
+                    child: Text(
+                      'YES',
+                      style: TextStyle(color: Colors.red),
+                    )),
+              ],
+            ));
+  }
+
+  showRestoreNoteDialog() async {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              backgroundColor: Color.fromARGB(255, 46, 46, 46),
+              title: Text('Do you want to restore selected notes?',
+                  style: TextStyle(color: Colors.white)),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      setState(() {
+                        selectedItemIndex.clear();
+                        isMultiSelectionMode = false;
+                        refreshNotes();
+                      });
+                    },
+                    child: Text(
+                      'NO',
+                      style: TextStyle(color: Colors.red),
+                    )),
+                TextButton(
+                    onPressed: () async {
+                      setState(() {
+                        Navigator.of(context).pop();
+                        for (int index in selectedItemIndex) {
+                          notesInRecycleBin[index].isInRecycleBin = false;
+                          NotesDatabase.instance.update(notesInRecycleBin[index]);
+                        }
+                        isMultiSelectionMode = false;
+                        refreshNotes();
+                      });
+                      showToast('Notes restored');
+                    },
+                    child: Text(
+                      'YES',
+                      style: TextStyle(color: Colors.green),
+                    )),
+              ],
+            ));
+  }
+
+  showToast(String message) {
+  String thisMessage = message;
+  Widget toast = Container(
+    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(25.0),
+      color: const Color.fromARGB(171, 0, 0, 0),
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          width: 12.0,
+        ),
+        Text(
+          message,
+          style: TextStyle(color: Colors.white),
+        ),
+      ],
+    ),
+  );
+  fToast?.showToast(
+      child: toast,
+      toastDuration: const Duration(seconds: 2),
+      positionedToastBuilder: (context, child) {
+        return Positioned(
+          bottom: 100,
+          left: 16,
+          right: 16,
+          child: child,
+        );
+      });
+}
+
+    // Custom Toast Position
+    
 }

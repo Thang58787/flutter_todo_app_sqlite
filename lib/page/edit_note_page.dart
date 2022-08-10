@@ -135,7 +135,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              backgroundColor: Color.fromARGB(133, 191, 189, 189),
+              backgroundColor: Color.fromARGB(255, 46, 46, 46),
               title: Text('Do you want to move this note to recycle bin?',
                   style: TextStyle(color: Colors.white)),
               actions: [

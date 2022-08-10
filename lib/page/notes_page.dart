@@ -180,16 +180,16 @@ class _NotesPageState extends State<NotesPage> {
 
   Widget buildDeleteButton() {
     return TextButton(
-        onPressed: () async {
-          for (int index in selectedItemIndex) {
-            // NotesDatabase.instance.delete(notes[index].id!);
-            notes[index].isInRecycleBin = true;
-            await NotesDatabase.instance.update(notes[index]);
-          }
-          isMultiSelectionMode = false;
-          setState(() {});
-          refreshNotes();
-          _showToast("Moved to Recycle Bin");
+        onPressed: () {
+          setState(() {
+            for (int index in selectedItemIndex) {
+              notes[index].isInRecycleBin = true;
+              NotesDatabase.instance.update(notes[index]);
+            }
+            isMultiSelectionMode = false;
+            refreshNotes();
+            showToast("Moved to Recycle Bin");
+          });
         },
         child: Icon(
           Icons.delete,
@@ -224,14 +224,13 @@ class _NotesPageState extends State<NotesPage> {
     return TextButton(
         onPressed: () async {
           for (int index in selectedItemIndex) {
-            // NotesDatabase.instance.delete(notes[index].id!);
             notes[index].isImportant = true;
             await NotesDatabase.instance.update(notes[index]);
           }
           isMultiSelectionMode = false;
           setState(() {});
           refreshNotes();
-          _showToast("Marked as important");
+          showToast("Marked as important");
         },
         child: Icon(
           Icons.star,
@@ -239,7 +238,7 @@ class _NotesPageState extends State<NotesPage> {
         ));
   }
 
-    _showToast(String message) {
+  showToast(String message) {
     String thisMessage = message;
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -260,8 +259,6 @@ class _NotesPageState extends State<NotesPage> {
         ],
       ),
     );
-
-    // Custom Toast Position
     fToast?.showToast(
         child: toast,
         toastDuration: const Duration(seconds: 2),
