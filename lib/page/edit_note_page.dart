@@ -166,16 +166,19 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
 
   buildToggleImportanrButton() {
     return TextButton(
-      child: widget.note?.isImportant == true
+      child: isImportant == true
           ? Icon(
               Icons.star,
               color: Colors.white,
             )
           : Icon(Icons.star_border, color: Colors.white),
       onPressed: () {
+        //TODO: fix here
         setState(() {
-          widget.note!.isImportant = !widget.note!.isImportant!;
+          isImportant = !isImportant!;
         });
+        widget.note?.isImportant = isImportant;
+        
       },
     );
   }
