@@ -241,7 +241,6 @@ class _NotesPageState extends State<NotesPage> {
   }
 
   showToast(String message) {
-    String thisMessage = message;
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       decoration: BoxDecoration(

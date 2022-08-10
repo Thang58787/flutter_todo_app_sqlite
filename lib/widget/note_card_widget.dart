@@ -61,7 +61,7 @@ class NoteCardWidget extends StatelessWidget {
                 ),
               if (removeWhitespace(note.description)  != '')
                 Text(
-                  note.description?.trim().replaceAll('\n', ' ') ?? '',
+                  note.description?.trim() ?? '',
                   maxLines: 8,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(

@@ -111,7 +111,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
       title: title,
       description: description,
       createdTime: DateTime.now(),
-      isImportant: widget.note?.isImportant ?? false,
+      isImportant: isImportant ?? false,
     );
     await NotesDatabase.instance.create(note);
   }
