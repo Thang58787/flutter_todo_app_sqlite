@@ -184,6 +184,7 @@ class _NotesPageState extends State<NotesPage> {
           setState(() {
             for (int index in selectedItemIndex) {
               notes[index].isInRecycleBin = true;
+              notes[index].isImportant = false;
               NotesDatabase.instance.update(notes[index]);
             }
             isMultiSelectionMode = false;
@@ -223,14 +224,15 @@ class _NotesPageState extends State<NotesPage> {
   Widget buildImportantButton() {
     return TextButton(
         onPressed: () async {
-          for (int index in selectedItemIndex) {
-            notes[index].isImportant = true;
-            await NotesDatabase.instance.update(notes[index]);
-          }
-          isMultiSelectionMode = false;
-          setState(() {});
-          refreshNotes();
-          showToast("Marked as important");
+          setState(() {
+            for (int index in selectedItemIndex) {
+              notes[index].isImportant = true;
+              NotesDatabase.instance.update(notes[index]);
+            }
+            isMultiSelectionMode = false;
+            refreshNotes();
+            showToast("Marked as important");
+          });
         },
         child: Icon(
           Icons.star,

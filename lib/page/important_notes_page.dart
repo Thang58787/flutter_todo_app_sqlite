@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '/db/notes_database.dart';
 import '/model/note.dart';
 import '/page/edit_note_page.dart';
@@ -22,10 +23,15 @@ class _ImportantNotesPageState extends State<ImportantNotesPage> {
   bool isMultiSelectionMode = false;
   bool? isVisible = true;
 
+  FToast? fToast;
+
   @override
   void initState() {
     super.initState();
     refreshNotes();
+
+    fToast = FToast();
+    fToast?.init(context);
   }
 
   @override
@@ -49,7 +55,7 @@ class _ImportantNotesPageState extends State<ImportantNotesPage> {
   @override
   Widget build(BuildContext context) => WillPopScope(
         onWillPop: () async {
-          SystemNavigator.pop(); 
+          SystemNavigator.pop();
           return true;
         },
         child: Scaffold(
@@ -175,14 +181,16 @@ class _ImportantNotesPageState extends State<ImportantNotesPage> {
   Widget buildDeleteButton() {
     return TextButton(
         onPressed: () async {
-          for (int index in selectedItemIndex) {
-            // NotesDatabase.instance.delete(notes[index].id!);
-            notes[index].isInRecycleBin = true;
-            await NotesDatabase.instance.update(notes[index]);
-          }
-          isMultiSelectionMode = false;
-          setState(() {});
-          refreshNotes();
+          setState(() {
+            for (int index in selectedItemIndex) {
+              notes[index].isInRecycleBin = true;
+              notes[index].isImportant = false;
+              NotesDatabase.instance.update(notes[index]);
+              refreshNotes();
+              showToast('Moved to Recycle Bin');
+            }
+            isMultiSelectionMode = false;
+          });
         },
         child: Icon(
           Icons.delete,
@@ -217,17 +225,51 @@ class _ImportantNotesPageState extends State<ImportantNotesPage> {
     return TextButton(
         onPressed: () async {
           for (int index in selectedItemIndex) {
-            // NotesDatabase.instance.delete(notes[index].id!);
             notes[index].isImportant = false;
             await NotesDatabase.instance.update(notes[index]);
           }
           isMultiSelectionMode = false;
           setState(() {});
           refreshNotes();
+          showToast('Mark as unimportant');
         },
         child: Icon(
           Icons.star_border,
           color: Colors.white,
         ));
+  }
+
+  showToast(String message) {
+    String thisMessage = message;
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: const Color.fromARGB(171, 0, 0, 0),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: 12.0,
+          ),
+          Text(
+            message,
+            style: TextStyle(color: Colors.white),
+          ),
+        ],
+      ),
+    );
+    fToast?.showToast(
+        child: toast,
+        toastDuration: const Duration(seconds: 2),
+        positionedToastBuilder: (context, child) {
+          return Positioned(
+            bottom: 100,
+            left: 16,
+            right: 16,
+            child: child,
+          );
+        });
   }
 }

@@ -145,7 +145,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
                     },
                     child: Text(
                       'NO',
-                      style: TextStyle(color: Colors.green),
+                      style: TextStyle(color: Colors.blue),
                     )),
                 TextButton(
                     onPressed: () async {
@@ -158,7 +158,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
                     },
                     child: Text(
                       'YES',
-                      style: TextStyle(color: Colors.red),
+                      style: TextStyle(color: Colors.blue),
                     )),
               ],
             ));

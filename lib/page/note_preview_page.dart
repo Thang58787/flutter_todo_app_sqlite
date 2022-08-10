@@ -100,7 +100,7 @@ class _NoteDetailPageState extends State<NotePreviewPage> {
                     },
                     child: Text(
                       'NO',
-                      style: TextStyle(color: Colors.green),
+                      style: TextStyle(color: Colors.blue),
                     )),
                 TextButton(
                     onPressed: () async {
@@ -112,7 +112,7 @@ class _NoteDetailPageState extends State<NotePreviewPage> {
                     },
                     child: Text(
                       'YES',
-                      style: TextStyle(color: Colors.red),
+                      style: TextStyle(color: Colors.blue),
                     )),
               ],
             ));
@@ -143,7 +143,7 @@ class _NoteDetailPageState extends State<NotePreviewPage> {
                     },
                     child: Text(
                       'NO',
-                      style: TextStyle(color: Colors.red),
+                      style: TextStyle(color: Colors.blue),
                     )),
                 TextButton(
                     onPressed: () async {
@@ -157,7 +157,7 @@ class _NoteDetailPageState extends State<NotePreviewPage> {
                     },
                     child: Text(
                       'YES',
-                      style: TextStyle(color: Colors.green),
+                      style: TextStyle(color: Colors.blue),
                     )),
               ],
             ));

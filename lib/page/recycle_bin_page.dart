@@ -243,7 +243,7 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
                     },
                     child: Text(
                       'NO',
-                      style: TextStyle(color: Colors.green),
+                      style: TextStyle(color: Colors.blue),
                     )),
                 TextButton(
                     onPressed: () async {
@@ -258,7 +258,7 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
                     },
                     child: Text(
                       'YES',
-                      style: TextStyle(color: Colors.red),
+                      style: TextStyle(color: Colors.blue),
                     )),
               ],
             ));
@@ -283,7 +283,7 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
                     },
                     child: Text(
                       'NO',
-                      style: TextStyle(color: Colors.red),
+                      style: TextStyle(color: Colors.blue),
                     )),
                 TextButton(
                     onPressed: () async {
@@ -300,7 +300,7 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
                     },
                     child: Text(
                       'YES',
-                      style: TextStyle(color: Colors.green),
+                      style: TextStyle(color: Colors.blue),
                     )),
               ],
             ));
