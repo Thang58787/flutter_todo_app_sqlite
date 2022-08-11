@@ -1,16 +1,12 @@
-# flutter_todo_app_sqlite_2
+## Description
+Simple Note - A simple Flutter Note-Taking App
+I'm a Flutter beginner. While learning programming, I want to apply what I learned to a real project.  And this repo is my result. From [this Youtube tutorial](https://www.youtube.com/watch?v=UpKrhZ0Hppk&t=229s), I have added some functions to the app to make its more usable.
 
-A new Flutter project.
+## Download
+[Download here](https://drive.google.com/file/d/1xMGM6N0fBhY-BYyh8VKlF_EoPinHQ8LX/view?usp=sharing)
 
-## Getting Started
+## Demo
+| ![](https://i.imgur.com/CE66msP.png) | ![](https://i.imgur.com/p7eH2nN.png) |![](https://i.imgur.com/bk9s9K7.png)     | 
+| ------------------------------------ | ------------------------------------ | --- |
+|![](https://i.imgur.com/TeOqe4U.png)  |![](https://i.imgur.com/iuohAjd.png)  |     |
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
