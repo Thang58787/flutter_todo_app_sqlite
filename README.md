@@ -10,4 +10,3 @@ I'm a Flutter beginner. While learning programming, I want to apply what I learn
 | ------------------------------------ | ------------------------------------ | --- |
 |![](https://i.imgur.com/TeOqe4U.png)  |![](https://i.imgur.com/iuohAjd.png)  |![](https://i.imgur.com/b1FibhT.png)
      |
-
