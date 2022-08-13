@@ -72,7 +72,7 @@ CREATE TABLE $tableNotes (
     // final result =
     //     await db.rawQuery('SELECT * FROM $tableNotes ORDER BY $orderBy');
 
-    final result = await db.query(tableNotes, orderBy: orderBy, where: '${NoteFields.isInRecycleBin} = false');
+    final result = await db.query(tableNotes, orderBy: orderBy, where: '${NoteFields.isInRecycleBin} = ?', whereArgs: [false]);
     
     return result.map((json) => Note.fromJson(json)).toList();
   }
