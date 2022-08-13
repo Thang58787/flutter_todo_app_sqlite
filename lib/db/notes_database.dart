@@ -72,7 +72,7 @@ CREATE TABLE $tableNotes (
     // final result =
     //     await db.rawQuery('SELECT * FROM $tableNotes ORDER BY $orderBy');
 
-    final result = await db.query(tableNotes, orderBy: orderBy, where: '${NoteFields.isInRecycleBin} = ?', whereArgs: [false]);
+    final result = await db.query(tableNotes, orderBy: orderBy, where: '${NoteFields.isInRecycleBin} = 0');
     
     return result.map((json) => Note.fromJson(json)).toList();
   }
@@ -84,7 +84,7 @@ CREATE TABLE $tableNotes (
     // final result =
     //     await db.rawQuery('SELECT * FROM $tableNotes ORDER BY $orderBy');
 
-    final result = await db.query(tableNotes, orderBy: orderBy, where: '${NoteFields.isInRecycleBin} = true');
+    final result = await db.query(tableNotes, orderBy: orderBy, where: '${NoteFields.isInRecycleBin} = 1');
     
     return result.map((json) => Note.fromJson(json)).toList();
   }
@@ -96,7 +96,7 @@ CREATE TABLE $tableNotes (
     // final result =
     //     await db.rawQuery('SELECT * FROM $tableNotes ORDER BY $orderBy');
 
-    final result = await db.query(tableNotes, orderBy: orderBy, where: '${NoteFields.isImportant} = true');
+    final result = await db.query(tableNotes, orderBy: orderBy, where: '${NoteFields.isImportant} = 1');
     
     return result.map((json) => Note.fromJson(json)).toList();
   }

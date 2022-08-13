@@ -254,7 +254,7 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
                       isMultiSelectionMode = false;
                       refreshNotes();
                       setState(() {});
-                      showToast('Notes deleted');
+                      showToast('Deleted');
                     },
                     child: Text(
                       'YES',
@@ -296,7 +296,7 @@ class _RecycleBinPageState extends State<RecycleBinPage> {
                         isMultiSelectionMode = false;
                         refreshNotes();
                       });
-                      showToast('Notes restored');
+                      showToast('Restored');
                     },
                     child: Text(
                       'YES',

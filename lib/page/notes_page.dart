@@ -59,6 +59,7 @@ class _NotesPageState extends State<NotesPage> {
           return true;
         },
         child: Scaffold(
+          key: key,
           drawer: DrawerWidget(),
           appBar: buildAppBar(context),
           body: buildBody(),
@@ -121,7 +122,7 @@ class _NotesPageState extends State<NotesPage> {
             ? CircularProgressIndicator()
             : notes.isEmpty
                 ? Text(
-                    'No Notes',
+                    'No Note',
                     style: TextStyle(color: Colors.white, fontSize: 24),
                   )
                 : buildNotes(),
