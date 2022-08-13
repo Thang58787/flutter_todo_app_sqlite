@@ -8,5 +8,4 @@ I'm a Flutter beginner. While learning programming, I want to apply what I learn
 ## Demo
 | ![](https://i.imgur.com/CE66msP.png) | ![](https://i.imgur.com/p7eH2nN.png) |![](https://i.imgur.com/bk9s9K7.png)     | 
 | ------------------------------------ | ------------------------------------ | --- |
-|![](https://i.imgur.com/TeOqe4U.png)  |![](https://i.imgur.com/iuohAjd.png)  |![](https://i.imgur.com/b1FibhT.png)
-     |
+|![](https://i.imgur.com/TeOqe4U.png)  |![](https://i.imgur.com/iuohAjd.png)  |![](https://i.imgur.com/b1FibhT.png)     |
